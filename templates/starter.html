@@ -12,13 +12,13 @@
     <title>IntelliHome</title>
   </head>
   <body>
-      <div class="containter">
+      <div class=".containter-fluid">
           <div class="row">
             <div class="col">
-                <img class="main-logo-custom" src="./..//images/intellihome-logo.png" alt="Main logo">
+                <img class="img-fluid" src="./..//images/intellihome-logo.png" alt="Main logo">
             </div>
             <div class="col">
-                <form class="form-inline search-bar-custom">
+                <form class="form-inline">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
@@ -28,18 +28,25 @@
 
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
-            <a class="nav-link active-custom" href="#">Active</a>
+            <a class="nav-link active" href="#">Active</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive-custom" href="#">Link</a>
+            <a class="nav-link inactive" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive-custom" href="#">Link</a>
+            <a class="nav-link inactive" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive-custom" href="#">Disabled</a>
+            <a class="nav-link inactive" href="#">Disabled</a>
         </li>
     </ul>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Library</li>
+        </ol>
+    </nav>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
