@@ -1,0 +1,43 @@
+/* Custom css for navigation bar*/
+
+.active-custom {
+    background-color:  rgb(63, 169, 245);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.inactive-custom{
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(95, 90, 90);
+    border-top-color: rgb(95, 90, 90);
+    border-right-color: rgb(95, 90, 90);
+    border-left-color: rgb(95, 90, 90);
+    border-style: solid;
+}
+
+.active-custom:hover{
+    background-color:  rgb(63, 169, 245);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+.inactive-custom:hover{
+    background-color: rgb(63, 169, 245);
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+/* Custom css for search form*/
+.search-bar-custom{
+    float: right;
+    padding-right: 5%;
+    height: 100px;
+    line-height: 100px;
+}
+
+/* Custom css for main logo*/
+.main-logo-custom{
+    width: 150px;
+    padding: 1%;
+}
