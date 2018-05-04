@@ -1,20 +1,27 @@
 /* Custom css for navigation bar*/
-
-.nav-link.active{
-    background-color: rgb(63, 169, 245) !important;
+.custom-tabs{
     font-family: Arial, Helvetica, sans-serif;
-    color: white !important;
 }
 
-.nav-link.inactive{
-    font-family: Arial, Helvetica, sans-serif;
-    color: rgb(95, 90, 90) !important;
+.custom-nav-link.active{
+    color:white;
+    background-color: rgb(63, 169, 245);
 }
 
-.nav-link.inactive:hover{
+.custom-nav-link.inactive{
+    color:rgb(80, 75, 75);
+    background-color: white;
+}
+
+.custom-nav-link.active:hover{
+    color:white;
+    background-color: rgb(63, 169, 245);
+}
+
+.custom-nav-link.inactive:hover{
     background-color: rgb(63, 169, 245);
     font-family: Arial, Helvetica, sans-serif;
-    color: white !important;
+    color: white;
 }
 
 /* Custom css for search form*/

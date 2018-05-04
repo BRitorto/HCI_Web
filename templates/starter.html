@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
+<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="https://getbootstrap.com/dist/js/bootstrap.js"></script>
+<link type="text/css" rel="stylesheet" href="https://getbootstrap.com/dist/css/bootstrap.css"/>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -12,32 +15,34 @@
     <title>IntelliHome</title>
   </head>
   <body>
-      <div class=".containter-fluid">
+      <div class=".container-fluid">
           <div class="row">
-            <div class="col">
-                <img class="img-fluid" src="./..//images/intellihome-logo.png" alt="Main logo">
+            <div class="col-sm-4">
+                <img class="img-responsive" src="./..//images/intellihome-logo.png" alt="Main logo">
             </div>
-            <div class="col">
-                <form class="form-inline">
+            <div class="col-sm-8">
+                <form class="form-inline navbar-form">
+                  <span class="input-group-btn">
                     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </span>
                 </form>
             </div>
         </div>
     </div>
 
-    <ul class="nav nav-tabs nav-fill">
+    <ul class="nav nav-tabs nav-fill custom-tabs">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Active</a>
+            <a class="nav-link custom-nav-link active" href="#">Active</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive" href="#">Link</a>
+            <a class="nav-link custom-nav-link inactive" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive" href="#">Link</a>
+            <a class="nav-link custom-nav-link inactive" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link inactive" href="#">Disabled</a>
+            <a class="nav-link custom-nav-link inactive" href="#">Disabled</a>
         </li>
     </ul>
 
