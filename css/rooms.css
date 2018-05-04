@@ -1,0 +1,87 @@
+.bg-primary{
+	background-color: #233d4d!important
+}
+
+.nav-link{
+	padding-right: 20px !important;
+	padding-left: 20px !important;
+}
+
+.navbar{
+	font-size: 25px;
+	font-weight: 600
+}
+
+.breadcrumb{
+	background: transparent !important;
+	font-size: 20px;
+	padding-top: 30px;
+	padding-bottom: 10px;
+	margin-left: 2%
+}
+
+.breadcrumb-item.before{
+	color: white !important;
+}
+
+.breadcrumb-item{
+	color: white !important;
+}
+
+.col{
+	padding-left: 2%;
+	padding-right: 2%;
+}
+
+.card{
+	background: white;
+	margin-bottom: 2rem;
+	border-color: #233d4d;
+	border-width: 5px;
+}
+
+body {
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  background-image:url("https://image.ibb.co/fhZBOn/bg1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+	background-position:center;
+  color: #262626;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #233d4d;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+}
+
+.list-group-item{
+	height: 70px;
+	font-size: 20px;
+}
+
+.list-group-item:hover{
+	background: #233d4d;
+	color: white;
+}
+
+.list-group-item.active{
+	background: #233d4d;
+	border-color: #233d4d;
+}
+
+.btn-outline-dark:hover{
+	background: #233d4d;
+}
+
+.list-group{
+	margin-top: 1rem;
+}
+
+
