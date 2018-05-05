@@ -67,6 +67,14 @@ body {
   height: 30px;
 }
 
+.btn-primary{
+  background: #233d4d;
+}
+
+.btn-primary:hover{
+  background: #182a34;
+}
+
 .search{
   background: #233d4d !important;
 }
