@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel="stylesheet" href="./../css/rooms.css">
 
-    <title>IntelliHome</title>
+    <title>Rooms</title>
 </head>
 <body>
 
@@ -39,7 +39,9 @@
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" type="text">
-          <button class="btn btn-default" type="submit">Search</button>
+          <button type="submit" class="btn btn-default search float-right">
+            <img class= "icon" src="./../images/magnifier.svg"/> 
+          </button> 
         </form>
       </div>
     </nav>
@@ -47,7 +49,7 @@
 <!--  Breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item before"><a href="#">Rooms</a></li>
+        <li class="breadcrumb-item"><a href="#">Rooms</a></li>
         <li class="breadcrumb-item active" aria-current="page">Library</li>
       </ol>
     </nav>
@@ -67,12 +69,33 @@
                 </div>
                </div>
                 <div class="list-group list-group-flush">
-                  <button type="button" class="list-group-item list-group-item-action">
-                  Kitchen
-                    <svg-icon><src href="sprite.svg#si-glyph-trash" /></svg-icon>                
-                  </button>
-                  <button type="button" class="list-group-item list-group-item-action">Room 1</button>
-                  <button type="button" class="list-group-item list-group-item-action">Room 2</button>
+                  <a href="#" class="list-group-item list-group-item-action">
+                    Kitchen
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-trash.svg"/> 
+                    </button>   
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-pencil.svg"/> 
+                    </button>           
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action">
+                    Room 1
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-trash.svg"/> 
+                    </button>   
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-pencil.svg"/> 
+                    </button>
+                  </a>
+                  <a href="#" class="list-group-item list-group-item-action">
+                    Room 2
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-trash.svg"/> 
+                    </button>   
+                    <button type="button" class="btn btn-default float-right">
+                      <img class= "icon" src="./../images/si-glyph-pencil.svg"/> 
+                    </button>
+                  </a>
                 </div>
             </div>
           </div>

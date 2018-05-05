@@ -1,3 +1,28 @@
+/* Main features */
+
+body {
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  background-image:url("https://image.ibb.co/fhZBOn/bg1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+	background-position: center;
+  color: #262626;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #233d4d;
+    text-align: center;
+    line-height: 40px;
+    height: 40px;
+}
+
+/* Navbar */
+
 .bg-primary{
 	background-color: #233d4d!important
 }
@@ -12,6 +37,8 @@
 	font-weight: 600
 }
 
+/* Breadcrumb */
+
 .breadcrumb{
 	background: transparent !important;
 	font-size: 20px;
@@ -20,13 +47,19 @@
 	margin-left: 2%
 }
 
-.breadcrumb-item.before{
-	color: white !important;
-}
-
 .breadcrumb-item{
 	color: white !important;
 }
+
+.breadcrumb a{
+	color: black;
+}
+
+.breadcrumb a:hover{
+	color: white;
+}
+
+/* Cards and Columns */
 
 .col{
 	padding-left: 2%;
@@ -40,26 +73,7 @@
 	border-width: 5px;
 }
 
-body {
-  padding-top: 4rem;
-  padding-bottom: 2rem;
-  background-image:url("https://image.ibb.co/fhZBOn/bg1.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-	background-position:center;
-  color: #262626;
-}
-
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #233d4d;
-    text-align: center;
-    line-height: 40px;
-    height: 40px;
-}
+/* List */
 
 .list-group-item{
 	height: 70px;
@@ -76,12 +90,27 @@ body {
 	border-color: #233d4d;
 }
 
+.list-group{
+	margin-top: 1rem;
+}
+
+/* Buttons and Icons */
+
+.icon{
+	width: 30px;
+	height: 30px;
+}
+
+.btn-default{
+	margin-left: 10px;
+}
+
 .btn-outline-dark:hover{
 	background: #233d4d;
 }
 
-.list-group{
-	margin-top: 1rem;
+.search{
+	background: #233d4d !important;
 }
 
 

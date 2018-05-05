@@ -1,16 +1,43 @@
+/* Main features */
+
+body {
+  padding-top: 4rem;
+  padding-bottom: 2rem;
+  background-image:url("https://image.ibb.co/fhZBOn/bg1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: #262626;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #233d4d;
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+}
+
+/* Navbar */
+
 .bg-primary{
-	background-color: #233d4d!important
+  background-color: #233d4d!important
 }
 
 .nav-link{
-	padding-right: 20px !important;
-	padding-left: 20px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
 }
 
 .navbar{
-	font-size: 25px;
-	font-weight: 600
+  font-size: 25px;
+  font-weight: 600
 }
+
+/* Cards and Columns */
 
 .col{
 	padding-left: 2%;
@@ -25,29 +52,29 @@
 	border-width: 5px;
 }
 
-body {
-  padding-top: 4rem;
-  padding-bottom: 2rem;
-  background-image:url("https://image.ibb.co/fhZBOn/bg1.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: #262626;
-}
-
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #233d4d;
-    text-align: center;
-    line-height: 40px;
-    height: 40px;
-}
+/* Buttons */
 
 .btn-outline-dark:hover{
 	background: #233d4d;
 }
 
+.btn-default{
+  margin-left: 10px;
+}
+
+.icon{
+  width: 30px;
+  height: 30px;
+}
+
+.search{
+  background: #233d4d !important;
+}
+
+/* Table */
+
+.table{
+  margin-top: 1rem;
+}
 
 
