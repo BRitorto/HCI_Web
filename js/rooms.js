@@ -11,7 +11,8 @@ $(document).ready(function() {
     load_rooms();
 
     $('#add-room').on('click', show_room_form);
-    $('#save_button').on('click', add_new_room);
+    $('.delete-room').on('click', delete_room);
+    
 
 });
 
@@ -25,6 +26,18 @@ function check_page_status()
 function show_room_form()
 {
     $('#addRoom').modal();
+    $('#save-button').on('click', add_new_room);
+    //$('#save-button').on('keypress', add_new_room_handler);
+    $(document).keypress(function(e) {
+        if(e.which == 13){
+            add_new_room();
+            $('#addRoom').modal('toggle');
+            $(document).off('keypress');
+        }
+    })
+
+    document.getElementById("room-form").reset();
+
 }
 
 
@@ -38,6 +51,7 @@ function add_new_room()
     var room = {'name': name};
     rooms.push(room);
     create_new_room(room);
+    $('#addRoom').modal('toggle');
 }
 
 
@@ -65,5 +79,14 @@ function create_new_room(room)
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"/>';
     new_dev = new_dev + '</button>';
     new_dev  = new_dev + '</a>';
-    $("#list_of_rooms").append(new_dev);
+    $("#list-of-rooms").append(new_dev);
+    
+}
+
+
+function delete_room()
+{
+ console.log("pressed"); 
+ $(this).closest("div .row").hide();
+
 }
