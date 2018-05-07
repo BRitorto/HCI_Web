@@ -1,7 +1,7 @@
 var page_ready = false;
 
 var rooms = [
-    {'name':'prueba'}
+    {'name':'prueba','id':'1'}
 
 ];
 
@@ -70,23 +70,38 @@ function load_rooms()
 
 function create_new_room(room)
 {
-    var new_dev = '<a href="#" class="list-group-item list-group-item-action">';
+    var new_dev = '<div class="row" id ="' + room['id'] + '">';
+    new_dev = new_dev + '<div class="col">';
+    new_dev = new_dev + '<a href="room.html" class="list-group-item list-group-item-action">';
     new_dev = new_dev + room['name'];
-    new_dev = new_dev + ' <button type="button" class="btn btn-default float-right">';
+    new_dev  = new_dev + '</a>';
+    new_dev = new_dev + '</div>';
+    new_dev = new_dev + '<div class="col">';
+    new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-room" >';
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"/>' ;
     new_dev = new_dev + '</button>';
     new_dev = new_dev + '<button type="button" class="btn btn-default float-right">';
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"/>';
     new_dev = new_dev + '</button>';
-    new_dev  = new_dev + '</a>';
-    $("#list-of-rooms").append(new_dev);
     
+    new_dev =new_dev + '</div> ';
+    new_dev =new_dev + '</div> ';
+    $("#list-of-rooms").append(new_dev);
+
+    refresh_handlers();
 }
 
+
+function refresh_handlers()
+{
+    $('.delete-room').off("click",delete_room);
+    $('.delete-room').on('click', delete_room);
+}
 
 function delete_room()
 {
- console.log("pressed"); 
- $(this).closest("div .row").hide();
+    $(this).closest("div .row").hide();
 
+    rooms = rooms.filter(item => item !== value);
 }
+
