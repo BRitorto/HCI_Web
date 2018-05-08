@@ -1,18 +1,14 @@
 var page_ready = false;
 
 var rooms = [
-    {'name':'prueba','id':'1'}
-
 ];
 
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
-    load_rooms();
-
+    get_rooms();
     $('#add-room').on('click', show_room_form);
     $('.delete-room').on('click', delete_room);
-    
 
 });
 
@@ -61,7 +57,7 @@ function load_rooms()
     {
         return;
     }
-
+    console.log(rooms);
     rooms.forEach(room => {
         create_new_room(room);
         console.log("creating new room");
@@ -70,13 +66,12 @@ function load_rooms()
 
 function create_new_room(room)
 {
-    var new_dev = '<div class="row" id ="' + room['id'] + '">';
-    new_dev = new_dev + '<div class="col">';
-    new_dev = new_dev + '<a href="room.html" class="list-group-item list-group-item-action">';
+    var new_dev = '<li class="list-group-item list-group-item-action" id="' + room['id'] + '">';
+
+    new_dev = new_dev + '<a href="./room.html">';
     new_dev = new_dev + room['name'];
     new_dev  = new_dev + '</a>';
-    new_dev = new_dev + '</div>';
-    new_dev = new_dev + '<div class="col">';
+
     new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-room" >';
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"/>' ;
     new_dev = new_dev + '</button>';
@@ -84,8 +79,7 @@ function create_new_room(room)
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"/>';
     new_dev = new_dev + '</button>';
     
-    new_dev =new_dev + '</div> ';
-    new_dev =new_dev + '</div> ';
+    new_dev =new_dev + '</li> ';
     $("#list-of-rooms").append(new_dev);
 
     refresh_handlers();
@@ -100,8 +94,30 @@ function refresh_handlers()
 
 function delete_room()
 {
-    $(this).closest("div .row").hide();
-
-    rooms = rooms.filter(item => item !== value);
+    $(this).closest("li").hide();
+    value = $(this).closest("div .row").attr("id");
+    rooms = rooms.filter(item => item['id'] != value);
 }
 
+
+
+
+function get_rooms()
+{
+    $.getJSON( "http://127.0.0.1:8080/api/rooms", function( data ) {
+    
+        load_rooms1(data['rooms']);
+    });
+}
+
+function load_rooms1(rooms)
+{
+    if(!check_page_status)
+    {
+        return;
+    }
+    rooms.forEach(room => {
+        create_new_room(room);
+        console.log("creating new room");
+    });
+}
