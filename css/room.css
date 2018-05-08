@@ -76,7 +76,28 @@ body {
 /* Accordion */
 
 .accordion{
+	margin-top: 1rem; 
+}
+
+/* Nav pills */
+
+.nav-pills{
 	margin-top: 1rem;
+}
+
+.custom-pills.active{
+	background:  #233d4d !important;
+}
+
+.custom-pills{
+	color:  #233d4d;
+	border: #233d4d !important;
+	height: 70px;
+	font-size: 20px;
+}
+
+.custom-pills:hover{
+	color: #182a34;
 }
 
 /* Buttons and Icons */
@@ -114,5 +135,4 @@ body {
 .search{
 	background: #233d4d !important;
 }
-
 
