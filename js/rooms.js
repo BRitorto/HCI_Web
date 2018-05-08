@@ -7,8 +7,8 @@ $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
     get_rooms();
-    $('#add-room').on('click', show_room_form);
-    $('.delete-room').on('click', delete_room);
+    $('#add-room').off().on('click', show_room_form);
+    $('.delete-room').off().on('click', delete_room);
 
 });
 
@@ -22,16 +22,14 @@ function check_page_status()
 function show_room_form()
 {
     $('#addRoom').modal();
-    $('#save-button').on('click', add_new_room);
+    $('#save-button').off().on('click', add_new_room);
     //$('#save-button').on('keypress', add_new_room_handler);
-    $(document).keypress(function(e) {
+    $(document).off().keypress(function(e) {
         if(e.which == 13){
             add_new_room();
             $('#addRoom').modal('toggle');
-            $(document).off('keypress');
         }
-    })
-
+    });
     document.getElementById("room-form").reset();
 
 }
@@ -48,6 +46,7 @@ function add_new_room()
     rooms.push(room);
     create_new_room(room);
     $('#addRoom').modal('toggle');
+    //$('#save-button').off('click', add_new_room);
 }
 
 
@@ -88,8 +87,7 @@ function create_new_room(room)
 
 function refresh_handlers()
 {
-    $('.delete-room').off("click",delete_room);
-    $('.delete-room').on('click', delete_room);
+    $('.delete-room').off().on("click",delete_room);
 }
 
 function delete_room()
