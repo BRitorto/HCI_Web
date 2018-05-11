@@ -1,7 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
    
+=======
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <script src="./../js/room.js"></script>
+    <script src="./../js/settings.js"></script>
+
+>>>>>>> 5fa3b58c67af574a41bcf680f0809ed4d745ee4b
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -68,42 +75,51 @@
                 </div>
               </div>
                <!-- Vertical pills -->
-                <div class="row">
-                    <div class="col-3">
-                      <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                        <a class="custom-pills nav-link " id="v-pills-lamps-tab" data-toggle="pill" href="#v-pills-lamps" role="tab" aria-controls="v-pills-lamps" aria-selected="false">Lamps</a>
-                      </div>
-                    </div>
-                    <div class="col-9" >
-                      <div class="tab-content" id="v-pills-tabContent">
-                        <div class="tab-pane fade show" id="v-pills-lamps" role="tabpanel" aria-labelledby="v-pills-lamps-tab">
-                          <!-- Accordion 1-->
-                          <div class="accordion" id="roomLamps" data-parent="#selector">
-                            <div class="secondary-card card">
-                              <div class="card-header" id="headingLamp1">
-                                <h5 class="mb-0">
-                                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp1" aria-expanded="false" aria-controls="collapseLamp1">
-                                    Lamp 1
-                                  </button>
-                                </h5>
-                              </div>
-                              <div id="collapseLamp1" class="collapse" aria-labelledby="headingLamp1" data-parent="#accordionExample">
-                                <div class="card-body">
-                                  Lamp settings
-                                </div>
-                              </div>
+              <div class="row">
+                <div class="col-3">
+                  <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="custom-pills nav-link " id="v-pills-lamps-tab" data-toggle="pill" href="#v-pills-lamps" role="tab" aria-controls="v-pills-lamps" aria-selected="false">Lamps</a>
+                  </div>
+                </div>
+                  <div class="col-9" >
+                    <div class="tab-content" id="v-pills-tabContent">
+                      <div class="tab-pane fade show" id="v-pills-lamps" role="tabpanel" aria-labelledby="v-pills-lamps-tab">
+                        <!-- Accordion 1-->
+                        <div class="accordion" id="roomLamps" data-parent="#selector">
+                          <div class="secondary-card card">
+                            <div class="card-header" id="headingLamp1">
+                              <h4 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp1" aria-expanded="false" aria-controls="collapseLamp1">
+                                  Lamp 1
+                                </button>
+                              </h4>
                             </div>
-                            <div class="secondary-card card">
-                              <div class="card-header" id="headingLamp2">
-                                <h5 class="mb-0">
-                                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp2" aria-expanded="false" aria-controls="collapseLamp2">
-                                    Lamp 2
-                                  </button>
-                                </h5>
-                              </div>
-                              <div id="collapseLamp2" class="collapse" aria-labelledby="headingLamp2" data-parent="#accordionExample">
-                                <div class="card-body">
-                                  Lamp settings
+                            <div id="collapseLamp1" class="collapse" aria-labelledby="headingLamp1" data-parent="#accordionExample">
+                              <div class="card-body">
+                                <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">
+                                <div class="settings">
+                                  <div class="row">
+                                    <div class="col-4">
+                                      <h5>Color</h5>
+                                      <input class="form-control" type="color" value="#563d7c" id="lamp-color">
+                                      <h5>Brightness</h5>
+                                      <div class="slidecontainer">
+                                        <input type="range" min="1" max="100" value="50" class="slider" id="lamp-brightness">
+                                        <span id="b">Value</span>
+                                      </div>
+                                      <img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">
+                                      <div class="form-group">
+                                        <h5>Set heat</h5>
+                                        <select class="form-control" id="exampleFormControlSelect1">
+                                          <option>1</option>
+                                          <option>2</option>
+                                          <option>3</option>
+                                          <option>4</option>
+                                          <option>5</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
