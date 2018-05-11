@@ -1,15 +1,13 @@
 var page_ready = false;
 
-var rooms = [
-];
 
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
     get_rooms();
-    $('#add-room').off().on('click', show_room_form);
+    $('#add-room').off().on('click',show_room_form);
     $('.delete-room').off().on('click', delete_room);
-
+    
 });
 
 
@@ -42,32 +40,35 @@ function add_new_room()
         return;
     }
     var name = $("#roomName").val();
-    var room = {'name': name};
-    rooms.push(room);
-    create_new_room(room);
+    var room = {"name": name};
+    $.post('http://127.0.0.1:8080/api/rooms/',room,function(){
+        get_rooms();
+    })
     $('#addRoom').modal('toggle');
-    //$('#save-button').off('click', add_new_room);
+    
 }
 
 
-function load_rooms()
+function load_rooms(rooms)
 {
     if(!check_page_status)
     {
         return;
     }
+    clear_displaying_rooms();
     console.log(rooms);
     rooms.forEach(room => {
         create_new_room(room);
         console.log("creating new room");
     });
+    
 }
 
 function create_new_room(room)
 {
-    var new_dev = '<li class="list-group-item list-group-item-action" id="' + room['id'] + '">';
+    var new_dev = '<li class="list-group-item list-group-item-action" data-child='+ room['id'] +' >';
 
-    new_dev = new_dev + '<a href="./room.html">';
+    new_dev = new_dev + '<a href="./room.html" class="room" id="' + room['id'] + '">';
     new_dev = new_dev + room['name'];
     new_dev  = new_dev + '</a>';
 
@@ -88,34 +89,42 @@ function create_new_room(room)
 function refresh_handlers()
 {
     $('.delete-room').off().on("click",delete_room);
+    $('.room').off().on('click', function(data){
+        set_current_room(data["target"].id)
+    });
 }
 
 function delete_room()
 {
     $(this).closest("li").hide();
-    value = $(this).closest("div .row").attr("id");
-    rooms = rooms.filter(item => item['id'] != value);
+    id_value = $(this).closest("li").attr("data-child");
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/rooms/'+ id_value,
+        type: 'DELETE',
+        success: function(response) {
+          console.log("delete!");
+          get_rooms();
+        }
+     });
 }
 
 
-
+function set_current_room(room_id)
+{
+    sessionStorage.setItem("current_room",room_id );
+}
 
 function get_rooms()
 {
     $.getJSON( "http://127.0.0.1:8080/api/rooms", function( data ) {
     
-        load_rooms1(data['rooms']);
+        load_rooms(data['rooms']);
     });
 }
 
-function load_rooms1(rooms)
+
+function clear_displaying_rooms()
 {
-    if(!check_page_status)
-    {
-        return;
-    }
-    rooms.forEach(room => {
-        create_new_room(room);
-        console.log("creating new room");
-    });
+    var rooms = $("li.list-group-item").remove();
+
 }
