@@ -1,14 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<<<<<<< HEAD
-   
-=======
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <script src="./../js/room.js"></script>
     <script src="./../js/settings.js"></script>
 
->>>>>>> 5fa3b58c67af574a41bcf680f0809ed4d745ee4b
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -87,42 +83,46 @@
                         <!-- Accordion 1-->
                         <div class="accordion" id="roomLamps" data-parent="#selector">
                           <div class="secondary-card card">
-                            <div class="card-header" id="headingLamp1">
-                              <h4 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp1" aria-expanded="false" aria-controls="collapseLamp1">
-                                  Lamp 1
-                                </button>
-                              </h4>
-                            </div>
-                            <div id="collapseLamp1" class="collapse" aria-labelledby="headingLamp1" data-parent="#accordionExample">
-                              <div class="card-body">
-                                <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">
-                                <div class="settings">
-                                  <div class="row">
-                                    <div class="col-4">
-                                      <h5>Color</h5>
-                                      <input class="form-control" type="color" value="#563d7c" id="lamp-color">
-                                      <h5>Brightness</h5>
-                                      <div class="slidecontainer">
-                                        <input type="range" min="1" max="100" value="50" class="slider" id="lamp-brightness">
-                                        <span id="b">Value</span>
-                                      </div>
-                                      <img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">
-                                      <div class="form-group">
-                                        <h5>Set heat</h5>
-                                        <select class="form-control" id="exampleFormControlSelect1">
-                                          <option>1</option>
-                                          <option>2</option>
-                                          <option>3</option>
-                                          <option>4</option>
-                                          <option>5</option>
-                                        </select>
+                            <ul id="lamps" class="list-unstyled">
+                              <li id="lamp1">
+                                <div class="card-header" id="headingLamp1">
+                                  <h4 class="mb-0">
+                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp1" aria-expanded="false" aria-controls="collapseLamp1">
+                                      Lamp 1
+                                    </button>
+                                  </h4>
+                                </div>
+                                <div id="collapseLamp1" class="collapse" aria-labelledby="headingLamp1" data-parent="#accordionExample">
+                                  <div class="card-body">
+                                    <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">
+                                    <div class="settings">
+                                      <div class="row">
+                                        <div class="col-4">
+                                          <h5>Color</h5>
+                                          <input class="form-control settings-form" type="color" value="#563d7c" id="lamp-color">
+                                          <h5>Brightness</h5>
+                                          <div class="slidecontainer">
+                                            <input type="range" min="1" max="100" value="50" class="slider" id="lamp-brightness">
+                                            <span id="b">Value</span>
+                                          </div>
+                                          <img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">
+                                          <div class="form-group">
+                                            <h5>Set heat</h5>
+                                            <select class="form-control settings-form" id="exampleFormControlSelect1">
+                                              <option>1</option>
+                                              <option>2</option>
+                                              <option>3</option>
+                                              <option>4</option>
+                                              <option>5</option>
+                                            </select>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
@@ -138,7 +138,7 @@
 
      <!-- Popups -->
     <popups>
-      <div class="modal fade" tabindex="-1" role="dialog" id="addDevice" data-backdrop= "true">
+      <div class="modal fade" tabindex="-1" role="dialog" id="add-device-form" data-backdrop= "true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -148,17 +148,18 @@
                 </button>
               </div>
               <div class="modal-body">
-                <form id="dev-form">
+                <form action= "#" id="dev-form">
+
                   <div class="form-group">
                     <label for="roomName">Enter device name</label>
-                    <input type="text" class="form-control" id="deviceName" placeholder="Device name">
+                    <input type="text" class="form-control" id="device-name" placeholder="Device name">
                   </div>
                   <div class="form-group">
-                    <label for="selectDeviceCategory">Select device category</label>
-                    <select class="form-control" id="selectDeviceCategory">
-
+                    <label for="select-device-category">Select device category</label>
+                    <select class="form-control" id="select-device-category">
                     </select>
                   </div>
+
                 </form>
               </div>
               <div class="modal-footer">
