@@ -4,10 +4,15 @@ var page_ready = false;
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
-    get_rooms();
-    $('#add-room').off().on('click',show_room_form);
-    $('.delete-room').off().on('click', delete_room);
-    
+    $.when(get_rooms()).
+    then($('button.edit-room').off().on('click',function (data) {
+        console.log("paso");
+        show_edit_room(data);
+      })).
+    then($('button.delete-room').off().on('click', delete_room)).
+    then($('#add-room').off().on('click',show_room_form));
+
+    console.log($('.delete-room'));
 });
 
 
@@ -29,7 +34,6 @@ function show_room_form()
         }
     });
     document.getElementById("room-form").reset();
-
 }
 
 
@@ -48,6 +52,45 @@ function add_new_room()
     
 }
 
+function show_edit_room(room_id)
+{
+    $('#editRoom').modal();
+    $('#save-edit-button').off().on('click', function(){
+        edit_room(room_id);
+    });
+    $(document).off().keypress(function(e) {
+        if(e.which == 13){
+            edit_room(room_id);
+            $('#editRoom').modal('toggle');
+        }
+    });
+    document.getElementById("room-form").reset();
+    
+    $('#editRoom').modal('toggle');
+    
+}
+
+function edit_room(room_id)
+{   
+    var name = $("#roomNameToChange").val();
+    var room = {
+        "name":name
+    };
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/rooms/'+room_id,
+        type: "PUT",
+        contentType:"application/json",
+        data:room,
+        success: function(result) {
+            get_rooms();
+        },
+        error: function(data){
+            console.log(data);
+        }
+    });
+
+
+}
 
 function load_rooms(rooms)
 {
@@ -73,10 +116,10 @@ function create_new_room(room)
     new_dev  = new_dev + '</a>';
 
     new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-room" >';
-    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"/>' ;
+    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"></img>' ;
     new_dev = new_dev + '</button>';
-    new_dev = new_dev + '<button type="button" class="btn btn-default float-right">';
-    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"/>';
+    new_dev = new_dev + '<button type="button" class="btn btn-default edit-room float-right" >';
+    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"></img>';
     new_dev = new_dev + '</button>';
     
     new_dev =new_dev + '</li> ';
@@ -89,6 +132,9 @@ function create_new_room(room)
 function refresh_handlers()
 {
     $('.delete-room').off().on("click",delete_room);
+    $('.edit-room').off().on('click',function (data) {
+        show_edit_room(($(this).parent('li').data('child')));
+      });
     $('.room').off().on('click', function(data){
         set_current_room(data["target"].id)
     });
