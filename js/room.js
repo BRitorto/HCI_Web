@@ -12,15 +12,17 @@ function add_device(){
     $('#save-button').off().on('click',function(data) {
         var type = $("#select-device-category").val(); 
         add_new_device(search_id_for_device_type(type));
+        $('#add-device-form').modal('toggle');
     });
     $(document).off().keypress(function(e) {
         if(e.which == 13){
             var type = $("#selectDeviceCategory").val();
             add_new_device(search_id_for_device_type(type));
-            $('#addRoom').modal('toggle');
+            $('#add-device-form').modal('toggle');
         }
     });
     document.getElementById("dev-form").reset();
+    //$('#add-device-form').modal('toggle');
 }
 
 
@@ -74,15 +76,15 @@ function show_device_types()
 
 function create_new_type(element)
 {
-    var new_dev = '<a class="custom-pills nav-link" id="'+ element['id'] + '-tab" data-toggle="pill" href="#'+element['id'] +'" role="tab" aria-controls="v-pills-profile" aria-selected="false">';
+    var new_dev = '<a class="custom-pills nav-link" id="'+ element['id'] + '-tab" data-toggle="pill" href="#'+element['name'] +'" role="tab" aria-controls="v-pills-profile" aria-selected="false">';
     new_dev = new_dev + get_dev_type_name(element);
     new_dev = new_dev + '</a>';
     $('#v-pills-tab').append(new_dev);
 
-    var new_acordion = '<div class="tab-pane fade show" id="'+ element['id'] +'" role="tabpanel" aria-labelledby="'+ element['id']+'-tab">';
+    var new_acordion = '<div class="tab-pane fade show" id="'+ element['name'] +'" role="tabpanel" aria-labelledby="'+ element['id']+'-tab">';
     new_acordion = new_acordion + '<div class="accordion" id="room'+ element['name'] + '" data-parent="#selector">';
     new_acordion = new_acordion + '<div class="secondary-card card">';
-    new_acordion = new_acordion + '<ul id="'+element['name']+ 's" class="list-unstyled">';
+    new_acordion = new_acordion + '<ul id="'+element['id']+'" class="list-unstyled">';
     new_acordion = new_acordion + '</ul></div></div></div>';
     $('#v-pills-tabContent').append(new_acordion);
 }
@@ -95,7 +97,7 @@ function add_new_device(id)
     var device = {'name': name, 'typeId':id};
     console.log(device);
     post_device(device);
-    $('#add-device').modal(close);
+    //$('#add-device-form').modal(close);
     console.log("finished");
 }
 
@@ -162,19 +164,20 @@ function post_device(device)
 function create_dev(device)
 {   
 
-    var list = '<ul id="'+get_dev_type_name(device)+'s" class="list-unstyled">';
+    var list = '#'+device['typeId'];
     var dev = ' <li id="'+device['name']+'">';
     dev += '<div class="card-header" id="heading' + device['name'] + '">';
     dev += '<h5 class="mb-0">';
-    dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + device['name'] + '" aria-expanded="false" aria-controls="collapseLamp1">';
+    dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + device['name'] + '" aria-expanded="false" aria-controls="collapse'+ device['name'] +'">';
     dev += device['name'];
     dev += '<div id="collapse' + device['name'] + '" class="collapse" aria-labelledby="heading' + device['name'] +'" data-parent="#accordionExample">';
     dev += '<div class="card-body">';
     dev += "Settings";
     dev += '</div></div></div></div>';
+    dev += '</li>'
+    
 
-
-    console.log($('#'+device['typeId']).append(dev));
+    
     $(list).append(dev);
     console.log("success");
 
@@ -197,3 +200,6 @@ function bind_dev_to_room(device, room_id)
         console.log("successfully bidn device to room");
     } )
 }
+
+
+
