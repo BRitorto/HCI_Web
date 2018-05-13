@@ -1,34 +1,26 @@
-var modal_on = false;
 $(document).ready(function() {
     console.log( "ready!" );
-    
-    $('#add-device').off().on('click', add_device);
+    $('#add-device-form').on('click', '#save-button', add_device);
+
     $.when(retrieve_device_types()).
     then(show_device_types()).
     then(get_devices());
-    
-
-
 });
 
-
-
 function add_device(){
-    $('#add-device-form').modal();
     
-    $('#save-button').off().on('click',function(data) {
         var type = $("#select-device-category").val(); 
         add_new_device(search_id_for_device_type(type));
-        location.reload();
-    });
-    $(document).off().keypress(function(e) {
-        if(e.which == 13){
-            var type = $("#selectDeviceCategory").val();
-            add_new_device(search_id_for_device_type(type));
-            location.reload();
-        }
-    });
-    document.getElementById("dev-form").reset();
+        console.log("adding device");
+
+        /*$(document).off().keypress(function(e) {
+            if(e.which == 13){
+                var type = $("#select-device-category").val();
+                add_new_device(search_id_for_device_type(type));
+            }
+        });*/
+        document.getElementById("dev-form").reset();
+        $('#add-device-form').modal("hide");
     
 }
 
@@ -100,11 +92,8 @@ function create_new_type(element)
 function add_new_device(id)
 {
     var name = $("#device-name").val();
-    console.log(name);
     var device = {'name': name, 'typeId':id};
-    console.log(device);
     post_device(device);
-    //$('#add-device-form').modal(close);
     console.log("finished");
 }
 
@@ -173,16 +162,17 @@ function create_dev(device)
     var list = '#'+device['typeId'];
     var dev = ' <li id="'+device['name']+'">';
     dev += '<div class="card-header" id="heading' + device['name'] + '">';
-    dev += '<h5 class="mb-0">';
+    dev += '<h4 class="mb-0">';
     dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + device['name'] + '" aria-expanded="false" aria-controls="collapse'+ device['name'] +'">';
     dev += device['name'];
+    dev += '</button>'
+    dev += '</h4>';
+    dev += '</div>';
     dev += '<div id="collapse' + device['name'] + '" class="collapse" aria-labelledby="heading' + device['name'] +'" data-parent="#accordionExample">';
     dev += '<div class="card-body">';
-    dev += "settings";
-    dev += '</div></div></div></div>';
+    dev += "Settings";
+    dev += '</div></div>';
     dev += '</li>'
-    
-
     
     $(list).append(dev);
     console.log("success");
