@@ -5,8 +5,8 @@ $(document).ready(function()
 {
     $('#lamp-brightness').on('input', lamp_slider);
     $('#oven-temperature').on('input', oven_slider);
-    $('.toggle').on('click', toggle);
-    $('.blind-toggle').on('click', toggle_blind);
+    //$('.toggle').on('click', toggle);
+    //$('.blind-toggle').on('click', toggle_blind);
 });
 
 function toggle()
@@ -48,12 +48,20 @@ function check_page_status()
     return page_ready;
 }
 
-function oven_slider()
+function oven_slider(dev_id, selector_id)
 {
-    $('#t').text(this.value);
+    var value = $('#'+selector_id).val();
+    $('#t'+ dev_id).text(value);
 } 
 
-function lamp_slider()
+function lamp_slider(dev_id, selector_id)
 {
-    $('#b').text(this.value);
+    var value = $('#'+selector_id).val();
+    $('#b'+dev_id).text(value);
+} 
+
+function ac_slider(dev_id, selector_id)
+{
+    var value = $('#'+selector_id).val();
+    $('#a'+ dev_id).text(value);
 } 

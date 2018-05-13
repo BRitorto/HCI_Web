@@ -10,9 +10,11 @@ $(document).ready(function() {
         show_edit_room(data);
       })).
     then($('button.delete-room').off().on('click', delete_room)).
-    then($('#add-room').off().on('click',show_room_form));
-
-    console.log($('.delete-room'));
+    then($('#add-room').off().on('click',show_room_form)).
+    then($('.room').off().on('click', function(data){
+        set_current_room(data["target"].id);
+    }));
+    
 });
 
 
@@ -136,7 +138,7 @@ function refresh_handlers()
         show_edit_room(($(this).parent('li').data('child')));
       });
     $('.room').off().on('click', function(data){
-        set_current_room(data["target"].id)
+        set_current_room(data["target"].id);
     });
 }
 
@@ -157,7 +159,11 @@ function delete_room()
 
 function set_current_room(room_id)
 {
+    console.log(room_id);
     sessionStorage.setItem("current_room",room_id );
+    $.get("http://127.0.0.1:8080/api/rooms/"+ room_id,function (data){
+        sessionStorage.setItem("current_room_name",data['room']["name"]);
+    });
 }
 
 function get_rooms()
