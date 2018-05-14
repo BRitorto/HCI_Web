@@ -78,7 +78,7 @@ body {
 	background: #233d4d;
 }
   
-  .btn-primary:hover{
+.btn-primary:hover{
 	background: #182a34;
 }
 
@@ -91,8 +91,27 @@ body {
 	color: #233d4d;
 }
 
+.btn-outline-dark{
+	margin-left: 10px;
+}
+
 .search{
 	background: #233d4d !important;
+}
+
+/* Cards and Columns */
+
+.col{
+	padding-left: 2%;
+	padding-right: 2%;
+}
+
+.main-card{
+	background: white;
+	margin-bottom: 2rem;
+	border-color: #233d4d;
+    border-width: 5px;
+    min-height: 300px;
 }
 
 

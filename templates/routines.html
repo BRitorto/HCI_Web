@@ -1,11 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
-    <script type="text/javascript" src="https://getbootstrap.com/dist/js/bootstrap.js"></script>
-    <script src="./../js/routines.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="https://getbootstrap.com/dist/css/bootstrap.css"/>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -51,16 +47,117 @@
 <!--  Breadcrumb -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="./rooms.html">Rooms</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Room X</li>
+        <li class="breadcrumb-item active" aria-current="page">Routines</li>
       </ol>
     </nav>
 
 <!-- Main body -->
     <main role="main" class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="main-card card">
+            <div class="card-body">
+              <ul class="nav nav-tabs nav-fill">
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#name">Name</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#rooms">Rooms</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#devices">Devices</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                  </li>
+                </ul>
 
+                <div class="tab-content">
+                  <div class="tab-pane fade show" id="name" role="tabpanel" aria-labelledby="name">
+                    <div class="row justify-content-center">
+                      <div class="col-md-4 col-md-offset-7">
+                        <h3 class="text-center" >Enter new routine name</h3>
+                       </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <div class="col-md-4 col-md-offset-7">
+                        <form id="name-form">
+                          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="routine-name">
+                        </form>
+                      </div>
+                    </div>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next1">Next</button>
+                </div>
+
+                <div class="tab-pane fade show" id="rooms" role="tabpanel" aria-labelledby="rooms">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <h3>Choose rooms to add</h3>
+                       </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                          <ul class="choose-rooms">
+                            <li>
+                              <input class="form-check-input" type="checkbox" value="" id="check-all">
+                              <label class="form-check-label" for="check-all">
+                                <h5>Choose all</h5>
+                              </label>
+                            </li>                  
+                          </ul>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next2">Next</button>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev1">Previous</button>
+              </div>
+
+              <div class="tab-pane fade show" id="devices" role="tabpanel" aria-labelledby="devices">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <h3>Choose devices to add</h3>
+                     </div>
+                  </div>
+                  <ul class="list-unstyled" id="selected-rooms">
+                    
+                </ul>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next2">Next</button>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev1">Previous</button>
+            </div>
+          </div>
+        </div> 
+      </div>
     </main>
 
+    <li id="Room1">
+        <div class="row">
+          <div class="col-md-4">
+            <h4>Room 1</h4>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="custom-pills nav-link " id="v-pills-lamps-tab" data-toggle="pill" href="#v-pills-lamps" role="tab" aria-controls="v-pills-lamps" aria-selected="false">Lamps</a>
+            </div>
+          </div>
+
+          <div class="col-9" >
+          <div class="tab-content" id="v-pills-tabContent">
+            <div class="tab-pane fade show" id="v-pills-lamps" role="tabpanel" aria-labelledby="v-pills-lamps-tab">
+              <ul class="choose-devices">
+                <li>
+                  <input class="form-check-input" type="checkbox" value="" id="check-all">
+                  <label class="form-check-label" for="check-all">
+                    <h5>Choose all</h5>
+                  </label>
+                </li>                  
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
 
               
   <!--Copyright-->
@@ -74,7 +171,8 @@
   <!-- Bootstrap core JavaScript
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="./../js/routines.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
   
