@@ -65,3 +65,19 @@ function ac_slider(dev_id, selector_id)
     var value = $('#'+selector_id).val();
     $('#a'+ dev_id).text(value);
 } 
+
+function timer_slider(dev_id, selector_id)
+{
+    var value = $('#'+selector_id).val();
+    $('#c'+ dev_id).text(value + " seconds");
+} 
+function refrigerator_slider(dev_id, selector_id)
+{
+    var value = $('#'+selector_id).val();
+    $('#r'+ dev_id).text(value);
+} 
+function freezer_slider(dev_id, selector_id)
+{
+    var value = $('#'+selector_id).val();
+    $('#f'+ dev_id).text(value);
+} 

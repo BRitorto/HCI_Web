@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <link rel="stylesheet" href="./../css/room.css">
 
-    <title>RoomX</title>
+    <title>Room</title>
 </head>
 <body>
 
@@ -72,7 +72,6 @@
               <div class="row">
                 <div class="col-3">
                   <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="custom-pills nav-link " id="v-pills-lamps-tab" data-toggle="pill" href="#v-pills-lamps" role="tab" aria-controls="v-pills-lamps" aria-selected="false">Lamps</a>
                   </div>
                 </div>
                   <div class="col-9" >
@@ -82,43 +81,7 @@
                         <div class="accordion" id="roomLamps" data-parent="#selector">
                           <div class="secondary-card card">
                             <ul id="lamps" class="list-unstyled">
-                              <li id="lamp1">
-                                <div class="card-header" id="headingLamp1">
-                                  <h4 class="mb-0">
-                                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseLamp1" aria-expanded="false" aria-controls="collapseLamp1">
-                                      Lamp 1
-                                    </button>
-                                  </h4>
-                                </div>
-                                <div id="collapseLamp1" class="collapse" aria-labelledby="headingLamp1" data-parent="#accordionExample">
-                                  <div class="card-body">
-                                    <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">
-                                    <div class="settings">
-                                      <div class="row">
-                                        <div class="col-4">
-                                          <h5>Color</h5>
-                                          <input class="form-control settings-form" type="color" value="#563d7c" id="lamp-color">
-                                          <h5>Brightness</h5>
-                                          <div class="slidecontainer">
-                                            <input type="range" min="1" max="100" value="50" class="slider" id="lamp-brightness">
-                                            <span id="b">Value</span>
-                                          </div>
-                                          <div class="form-group">
-                                            <h5>Set heat</h5>
-                                            <select class="form-control settings-form" id="exampleFormControlSelect1">
-                                              <option>1</option>
-                                              <option>2</option>
-                                              <option>3</option>
-                                              <option>4</option>
-                                              <option>5</option>
-                                            </select>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </li>
+                              
                             </ul>
                           </div>
                         </div>

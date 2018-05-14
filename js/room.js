@@ -96,11 +96,31 @@ function create_new_type(element)
 function add_new_device(id)
 {
     var name = $("#device-name").val();
-    var device = {'name': name, 'typeId':id};
+    var device = {'name': name, 'typeId':id, 'meta':JSON.stringify(get_meta_for_dev(id))};
     post_device(device);
     console.log("finished");
 }
 
+function get_meta_for_dev(typeId)
+{
+    switch(typeId){
+        case "eu0v2xgprrhhg41g":
+            return {'mode': 'down'};
+        case "go46xmbqeomjrsjr":
+            return {'status':'off','color':'#563d7c', 'brightness':'50'};
+        case "im77xxyulpegfmv8":
+            return {'status':'off', 'temperature':'180','heat':'conventional','grill':'large','convection':'normal'};
+        case "li6cbv5sdlatti0j":
+            return {'status':'off','temperature':'24','mode':'cool','vertical_swing':'auto','horizontal_swing':'auto','fan':'auto'};
+        case "lsf78ly0eqrjbz91":
+            return {'status':'close','lock':'off'};
+        case "ofglvd9gqX8yfl3l":
+            return {'status':'off','time':'0'};
+        case "rnizejqr2di0okho":
+            return {'status':'off','freezer':'-10','refrigerator':'4','mode':'default'};
+        
+    }
+}
 
 
 function get_dev_type_name(element){
@@ -153,6 +173,7 @@ function get_dev_value_by_type(name)
 
 function post_device(device)
 {
+    console.log(JSON.stringify(device));
    $.post("http://127.0.0.1:8080/api/devices",device,function(data){
         bind_dev_to_room(data['device'], get_current_room_id());
         //refresh_list_dev();
@@ -203,6 +224,19 @@ function refresh_dev_listeners(device)
      $('#ac-' + device["id"]).off().on('input', function (para) { 
         
         ac_slider(device["id"], this.id);
+     });
+
+     $('#timer-' + device["id"]).off().on('input', function (para) { 
+        
+        timer_slider(device["id"], this.id);
+     });
+     $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
+        
+        refrigerator_slider(device["id"], this.id);
+     });
+     $('#freezer-' + device["id"]).off().on('input', function (para) { 
+        
+        freezer_slider(device["id"], this.id);
      });
 }
 
@@ -263,23 +297,35 @@ function load_settings(device)
 
 function load_blind_settings(device)
 {
-    var settings = '<img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">';
+
+    var settings;
+    var status = convert_to_json(device['meta']);
+    if(status['mode'] == "down")
+        settings = '<img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">';
+   else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-up.png">';
     return settings;
 }
 
 
 function load_lamp_settings(device)
 {
-    var settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+
     settings += '<div class="settings">';
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Color</h5>';
-    settings += '<input class="form-control settings-form" type="color" value="#563d7c" >';
+    settings += '<input class="form-control settings-form" type="color" value="'+ prev_state['color']+'" >';
     settings += '<h5>Brightness</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="1" max="100" value="50" class="slider" id=lamp-' + device['id']+'>';
-    settings += '<span id="b'+ device['id'] +'">Value</span>';
+    settings += '<input type="range" min="1" max="100" value="'+prev_state['brightness'] +'" class="slider" id=lamp-' + device['id']+'>';
+    settings += '<span id="b'+ device['id'] +'">'+prev_state['brightness'] +'</span>';
     settings += '</div>';
     settings += '</div>';
     settings += '</div>';
@@ -289,18 +335,24 @@ function load_lamp_settings(device)
 
 function load_oven_settings(device)
 {
-    var settings = ' <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+
     settings += '<div class="settings">';
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="90" max="230" value="180" class="slider" id=oven-' + device['id']+'>';
-    settings += '<span id="t'+ device['id'] +'">Value</span>';
+    settings += '<input type="range" min="90" max="230" value="'+ prev_state['temperature']+'" class="slider" id=oven-' + device['id']+'>';
+    settings += '<span id="t'+ device['id'] +'">'+ prev_state['temperature']+'</span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set heat</h5>';
-    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + ' value="'+prev_state['heat'] +'" ">';
     settings += '<option>conventional</option>';
     settings += '<option>bottom</option>';
     settings += '<option>top</option>';
@@ -308,7 +360,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Grill</h5>';
-    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + ' value="'+prev_state['grill'] +'" ">';
     settings += '<option>large</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -316,7 +368,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Convection</h5>';
-    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + ' value="'+prev_state['convection'] +'" ">';
     settings += '<option>normal</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -332,18 +384,24 @@ function load_oven_settings(device)
 
 function load_ac_settings(device)
 {
-    var settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+
     settings += '<div class="settings">';
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="18" max="38" value="24" class="slider" id=ac-' + device['id']+'>';
-    settings += '<span id="a'+ device['id'] +'">Value</span>';
+    settings += '<input type="range" min="18" max="38" value="'+ prev_state['temperature']+'" class="slider" id=ac-' + device['id']+'>';
+    settings += '<span id="a'+ device['id'] +'">'+ prev_state['temperature']+'</span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
-    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + ' value="'+prev_state['mode'] +'" ">';
     settings += '<option>cool</option>';
     settings += '<option>heat</option>';
     settings += '<option>fan</option>';
@@ -351,7 +409,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set vertical swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + ' value="'+prev_state['vertical_swing'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>22</option>';
     settings += '<option>45</option>';
@@ -361,7 +419,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set horizontal swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + ' value="'+prev_state['horizontal_swing'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>- 90</option>';
     settings += '<option>- 45</option>';
@@ -372,7 +430,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set fan speed</h5>';
-    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + '">';
+    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + ' value="'+prev_state['fan'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>25</option>';
     settings += '<option>50</option>';
@@ -389,43 +447,104 @@ function load_ac_settings(device)
 
 function load_door_settings(device)
 {
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
 
+    settings += '<div class="settings">';
+    settings += '<div class="row">';
+    settings += '<div class="col-4">';
+    settings += '<div class="form-group">';
+    settings += '<h5>Set lock</h5>';
+    settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + ' value="'+ prev_state['lock']+ '">';
+    settings += '<option>On</option>';
+    settings += '<option>Off</option>';
+    settings += '</select>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    return settings;
 }
 
 function load_timer_settings(device)
-{
-
+{   
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+    
+    settings += '<div class="settings">';
+    settings += '<div class="row">';
+    settings += '<div class="col-4">';
+    settings += '<h5>Time</h5>';
+    settings += '<div class="slidecontainer">';
+    settings += '<input type="range" min="0" max="21474836" value="'+ prev_state['time'] +'" class="slider" id=timer-' + device['id']+'>';
+    settings += '<span id="c'+ device['id'] +'">'+ prev_state['time'] +'</span>';
+    settings += '</div>';
+    settings += '<div class="form-group">';
+    settings += '<h5>Set Alarm</h5>';
+    settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + ' value="'+ prev_state['status'] +'">';
+    settings += '<option>Start</option>';
+    settings += '<option>Stop</option>';
+    settings += '</select>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    return settings;
 }
 
 function load_refrigerator_settings(device)
 {
-
+    var settings;
+    var prev_state = convert_to_json(device['meta']);
+    if(prev_state['status'] == 'off')
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    else
+        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+    
+    settings += '<div class="settings">';
+    settings += '<div class="row">';
+    settings += '<div class="col-4">';
+    settings += '<h5>set freezer temperature</h5>';
+    settings += '<div class="slidecontainer">';
+    settings += '<input type="range" min="-20" max="-10" value="'+ prev_state['freezer']+ '" class="slider" id=freezer-' + device['id']+' >';
+    settings += '<span id="f'+ device['id'] +'">' + prev_state['freezer']+ '</span>';
+    settings += '</div>';
+    settings += '<h5>set refrigerator temperature</h5>';
+    settings += '<div class="slidecontainer">';
+    settings += '<input type="range" min="2" max="8" value="' + prev_state['refrigerator']+ '" class="slider" id=refrigerator-' + device['id']+'>';
+    settings += '<span id="r'+ device['id'] +'">' + prev_state['refrigerator']+ '</span>';
+    settings += '</div>';
+    settings += '<div class="form-group">';
+    settings += '<h5>Set Mode</h5>';
+    settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + ' value="'+ prev_state['mode']+'">';
+    settings += '<option>Default</option>';
+    settings += '<option>vacations</option>';
+    settings += '<option>party</option>';
+    settings += '</select>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    settings += '</div>';
+    return settings;
 }
 
 
-{/* <div class="card-body">
-    <img class="img-responsive turned-off toggle" src="./../images/switches-off.png">
-    <div class="settings">
-        <div class="row">
-        <div class="col-4">
-            <h5>Color</h5>
-            <input class="form-control settings-form" type="color" value="#563d7c" id="lamp-color">
-            <h5>Brightness</h5>
-            <div class="slidecontainer">
-            <input type="range" min="1" max="100" value="50" class="slider" id="lamp-brightness">
-            <span id="b">Value</span>
-            </div>
-            <div class="form-group">
-            <h5>Set heat</h5>
-            <select class="form-control settings-form" id="exampleFormControlSelect1">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-            </select>
-            </div>
-        </div>
-        </div>
-    </div>
-    </div> */}
+
+
+function convert_to_json(json_string) 
+{ 
+    // console.log(json_string);
+    // var val  = json_string.replace(/"/g,'');
+    // console.log(val);
+    // val =  val.replace(/'/g,'"');
+    // console.log(val);
+    return JSON.parse(json_string);
+}

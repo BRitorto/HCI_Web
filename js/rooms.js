@@ -59,6 +59,7 @@ function show_edit_room(room_id)
     $('#editRoom').modal();
     $('#save-edit-button').off().on('click', function(){
         edit_room(room_id);
+        $('#editRoom').modal('toggle');
     });
     $(document).off().keypress(function(e) {
         if(e.which == 13){
@@ -82,7 +83,7 @@ function edit_room(room_id)
         url: 'http://127.0.0.1:8080/api/rooms/'+room_id,
         type: "PUT",
         contentType:"application/json",
-        data:room,
+        data:JSON.stringify(room),
         success: function(result) {
             get_rooms();
         },
