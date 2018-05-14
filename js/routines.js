@@ -6,12 +6,13 @@ $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
 
-    get_rooms();
-    retrieve_device_types();
     $("#check-all").on('click', check_all);
     $("#next1").on('click', put_name);
     $("#next2").on('click', save_selected_rooms);
 
+
+    //$("#previous1").on('click', refresh_rooms);
+    //$("#previous2").on('click', refresh_devices);
     // al final hacer essto document.getElementById("name-form").reset();
 
 });
@@ -27,6 +28,12 @@ function put_name()
     {
         routine.name = name;
     }
+    $("#name-tab").attr('class', 'nav-link disabled');
+    $("#rooms-tab").attr('class', 'nav-link active show');
+    $("#name").attr('class', 'tab-pane fade show');
+    $("#rooms").attr('class', 'tab-pane fade show active');
+    
+    get_rooms();
 }
 
 function check_all()
@@ -53,11 +60,10 @@ function load_rooms(rooms)
     {
         return;
     }
-
     rooms.forEach(room => {
-        create_new_checkbox(room);
+        var new_checkbox = create_new_checkbox(room);
+        $(".choose-rooms").append(new_checkbox);
         all_rooms.push(room);
-        console.log("creating new room");
     });
 }
 
@@ -71,7 +77,6 @@ function create_new_checkbox(room)
     new_checkbox += '<h5>'
     new_checkbox += '</label></li>';
 
-    $(".choose-rooms").append(new_checkbox);
     return new_checkbox;
 }
 
@@ -85,6 +90,10 @@ function save_selected_rooms()
     });
 
     select_devices();
+    $("#rooms-tab").attr('class', 'nav-link disabled');
+    $("#devices-tab").attr('class', 'nav-link active show');
+    $("#rooms").attr('class', 'tab-pane fade show');
+    $("#devices").attr('class', 'tab-pane fade show active');
 }
 
 function retrieve_device_types()
@@ -98,13 +107,9 @@ function retrieve_device_types()
 function select_devices()
 {
     selected_rooms.forEach(room => {
-        console.log(room['name']);
-        console.log(room['id']);
         display_room(room);
         var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+room['id']+"/devices",function (data) {
-            var arr =  data['devices'];
-            create_types(arr, room);
-            //display_devices(devices, room);
+            create_types(data['devices'], room);
           });
     });
 }
@@ -120,6 +125,7 @@ function create_types(devices, room)
     types.forEach(type =>{
         display_type(type, room);
     });
+    display_devices(devices, room);
 }
 
 function display_devices(devices, room)
@@ -132,31 +138,24 @@ function display_devices(devices, room)
 function display_room(room)
 {
     var new_room = '<li id="'+room['name']+'">';
-    new_room += '<div class="row"><div class="col-md-4">';
+    new_room += '<div class="row">';
+    new_room += '<div class="col-md-4">';
     new_room += '<h4>'+room['name']+'</h4>';
-    new_room += '</div></div><div class="row"><div class="col-3">';
-    new_room += '<div class="nav flex-column nav-pills" id="'+room['name']+'-tab" role="tablist" aria-orientation="vertical">';
-    new_room += '</div></div></div></li>';
-
+    new_room += '<ul id="'+room['name']+'-types">';
+    new_room += '</ul>';
+    new_room += '</div></div>';
+    
     $("#selected-rooms").append(new_room);
 }
 
 function display_type(type, room)
 {
-    var selected_room = '#'+room['name']+'-tab'
-    var new_type = '<a class="custom-pills nav-link " id="'+type+'-tab" data-toggle="pill" href="#'+type+'" role="tab" aria-controls="'+type+'" aria-selected="false">'
+    var selected_room = '#'+room['name']+'-types';
+    var new_type = '<li>';
     new_type += get_type_name(type);
-    new_type += '</a>';
-    new_type += '<div class="tab-content" id="'+type+'-tabContent">';
-    new_type += '<div class="tab-pane fade show" id="'+type+'" role="tabpanel" aria-labelledby="'+type+'-tab">';
-    new_type += '<ul class="choose-'+type+'">';
-    new_type += '<li>'
-    new_type += '<input class="form-check-input" type="checkbox" value="" id="check-all">';
-    new_type += '<label class="form-check-label" for="check-all">';
-    new_type += '<h5>Choose all</h5>';
-    new_type += '</label>';
+    new_type += '<ul id= "'+type+'-devices" class="list-unstyled">';
+    new_type += '</ul>';
     new_type += '</li>';
-    new_type += '</ul></div></div>';
 
     $(selected_room).append(new_type);
 }
@@ -165,8 +164,9 @@ function display_device(device, room)
 {
     var new_device = create_new_checkbox(device);
 
-    var selected_room = '#'+room['name']+'-tab';
-    $(selected_room).closest('ul').append(new_device);
+    var selected_room = '#'+room['name']+'-types';
+    var selected_type = '#'+device['typeId']+'-devices';
+    $(selected_room).find(selected_type).append(new_device);
 }
 
 function get_type_name(id)
