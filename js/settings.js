@@ -236,3 +236,22 @@ function freezer_slider(dev_id, selector_id,dev)
         }
     });
 } 
+
+function update_setting(dev, key, value)
+{
+    var settings  = JSON.parse(dev['meta']);
+    settings[key] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+    });
+}

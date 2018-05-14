@@ -239,6 +239,19 @@ function refresh_dev_listeners(device)
             
             oven_slider(device["id"], this.id, device);
             });
+            $('#form-heat-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'heat',$('#form-heat-' + device["id"]).val());
+            });
+            $('#form-grill-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'grill',$('#form-grill-' + device["id"]).val());
+            });
+            $('#form-convection-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'convection',$('#form-convection-' + device["id"]).val());
+            });
+
             break;
 
         case "li6cbv5sdlatti0j":
@@ -248,6 +261,23 @@ function refresh_dev_listeners(device)
             $('#ac-' + device["id"]).off().on('input', function (para) { 
                 ac_slider(device["id"], this.id);
             });
+            $('#form-mode-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'mode',$('#form-mode-' + device["id"]).val());
+            });
+            $('#form-vertical-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'vertical_swing',$('#form-vertical-' + device["id"]).val());
+            });
+            $('#form-horizontal-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'horizontal_swing',$('#form-horizontal-' + device["id"]).val());
+            });
+            $('#form-speed-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'fan',$('#form-speed-' + device["id"]).val());
+            });
+            
             break;
     
         case "lsf78ly0eqrjbz91":
@@ -265,6 +295,10 @@ function refresh_dev_listeners(device)
             $('#timer-' + device["id"]).off().on('input', function (para) {    
             timer_slider(device["id"], this.id);
             });
+            $('#form-timer-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'time',$('#form-timer-' + device["id"]).val());
+            });
             break;
         case "rnizejqr2di0okho":
             $('.toggle').off().on('click', function(){
@@ -278,6 +312,10 @@ function refresh_dev_listeners(device)
             $('#freezer-' + device["id"]).off().on('input', function (para) { 
             
             freezer_slider(device["id"], this.id, device);
+            });
+            $('#form-refrigerator-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,'mode',$('#form-refrigerator-' + device["id"]).val());
             });
             break;
         
@@ -403,7 +441,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set heat</h5>';
-    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + ' value="'+prev_state['heat'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '" value="'+prev_state['heat'] +'" ">';
     settings += '<option>conventional</option>';
     settings += '<option>bottom</option>';
     settings += '<option>top</option>';
@@ -411,7 +449,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Grill</h5>';
-    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + ' value="'+prev_state['grill'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + '" value="'+prev_state['grill'] +'" ">';
     settings += '<option>large</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -419,7 +457,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Convection</h5>';
-    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + ' value="'+prev_state['convection'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + '" value="'+prev_state['convection'] +'" ">';
     settings += '<option>normal</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -454,7 +492,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
-    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + ' value="'+prev_state['mode'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + '" value="'+prev_state['mode'] +'" ">';
     settings += '<option>cool</option>';
     settings += '<option>heat</option>';
     settings += '<option>fan</option>';
@@ -462,7 +500,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set vertical swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + ' value="'+prev_state['vertical_swing'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + '" value="'+prev_state['vertical_swing'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>22</option>';
     settings += '<option>45</option>';
@@ -472,7 +510,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set horizontal swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + ' value="'+prev_state['horizontal_swing'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + '" value="'+prev_state['horizontal_swing'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>- 90</option>';
     settings += '<option>- 45</option>';
@@ -483,7 +521,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set fan speed</h5>';
-    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + ' value="'+prev_state['fan'] +'" ">';
+    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + '" value="'+prev_state['fan'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option>25</option>';
     settings += '<option>50</option>';
@@ -514,7 +552,7 @@ function load_door_settings(device)
     settings += '<div class="col-4">';
     settings += '<div class="form-group">';
     settings += '<h5>Set lock</h5>';
-    settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + ' value="'+ prev_state['lock']+ '">';
+    settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + '"  value="'+ prev_state['lock']+ '">';
     settings += '<option>On</option>';
     settings += '<option>Off</option>';
     settings += '</select>';
@@ -546,7 +584,7 @@ function load_timer_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Alarm</h5>';
-    settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + ' value="'+ prev_state['status'] +'">';
+    settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + '" value="'+ prev_state['status'] +'">';
     settings += '<option>Start</option>';
     settings += '<option>Stop</option>';
     settings += '</select>';
@@ -583,7 +621,7 @@ function load_refrigerator_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
-    settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + ' value="'+ prev_state['mode']+'">';
+    settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + '" value="'+ prev_state['mode']+'">';
     settings += '<option>Default</option>';
     settings += '<option>vacations</option>';
     settings += '<option>party</option>';
