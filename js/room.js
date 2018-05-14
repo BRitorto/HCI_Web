@@ -237,7 +237,7 @@ function refresh_dev_listeners(device)
             });
             $('#oven-' + device["id"]).off().on('input', function (para) { 
             
-            oven_slider(device["id"], this.id);
+            oven_slider(device["id"], this.id, device);
             });
             break;
 
@@ -273,11 +273,11 @@ function refresh_dev_listeners(device)
             $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
             
             $('.toggle').off().on('click', toggle);    
-            refrigerator_slider(device["id"], this.id);
+            refrigerator_slider(device["id"], this.id, device);
             });
             $('#freezer-' + device["id"]).off().on('input', function (para) { 
             
-            freezer_slider(device["id"], this.id);
+            freezer_slider(device["id"], this.id, device);
             });
             break;
         
@@ -600,10 +600,5 @@ function load_refrigerator_settings(device)
 
 function convert_to_json(json_string) 
 { 
-    // console.log(json_string);
-    // var val  = json_string.replace(/"/g,'');
-    // console.log(val);
-    // val =  val.replace(/'/g,'"');
-    // console.log(val);
     return JSON.parse(json_string);
 }

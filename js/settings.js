@@ -111,36 +111,128 @@ function check_page_status()
     return page_ready;
 }
 
-function oven_slider(dev_id, selector_id)
+function oven_slider(dev_id, selector_id,dev)
 {
     var value = $('#'+selector_id).val();
     $('#t'+ dev_id).text(value);
+    var settings  = JSON.parse(dev['meta']);
+    settings['temperature'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+        });
+
 } 
 
-function lamp_slider(dev_id, selector_id)
+function lamp_slider(dev_id, selector_id,dev)
 {
     var value = $('#'+selector_id).val();
     $('#b'+dev_id).text(value);
+
+    var settings  = JSON.parse(dev['meta']);
+    settings['brightness'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+    url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+    type: 'PUT',
+    contentType:"application/json",
+    data: JSON.stringify(dev),
+    success: function(result) {
+        console.log('updated');
+    },
+    error: function(data){
+        console.log(data['responseText']);
+    }
+    });
 } 
 
-function ac_slider(dev_id, selector_id)
+function ac_slider(dev_id, selector_id, dev)
 {
     var value = $('#'+selector_id).val();
     $('#a'+ dev_id).text(value);
+    var settings  = JSON.parse(dev['meta']);
+    settings['temperature'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+    });
 } 
 
-function timer_slider(dev_id, selector_id)
+function timer_slider(dev_id, selector_id, dev)
 {
     var value = $('#'+selector_id).val();
     $('#c'+ dev_id).text(value + " seconds");
+    var settings  = JSON.parse(dev['meta']);
+    settings['time'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+    });
 } 
-function refrigerator_slider(dev_id, selector_id)
+function refrigerator_slider(dev_id, selector_id,dev)
 {
     var value = $('#'+selector_id).val();
     $('#r'+ dev_id).text(value);
+    var settings  = JSON.parse(dev['meta']);
+    settings['refrigerator'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+    });
 } 
-function freezer_slider(dev_id, selector_id)
+function freezer_slider(dev_id, selector_id,dev)
 {
     var value = $('#'+selector_id).val();
     $('#f'+ dev_id).text(value);
+    var settings  = JSON.parse(dev['meta']);
+    settings['freezer'] = value;
+    dev['meta'] = JSON.stringify(settings);
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
+        type: 'PUT',
+        contentType:"application/json",
+        data: JSON.stringify(dev),
+        success: function(result) {
+            console.log('updated');
+        },
+        error: function(data){
+            console.log(data['responseText']);
+        }
+    });
 } 
