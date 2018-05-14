@@ -81,7 +81,6 @@ function toggle_blind(dev, selector)
             }
          });
     }
-
     else
     {
         console.log($(selector));
@@ -137,7 +136,6 @@ function lamp_slider(dev_id, selector_id,dev)
 {
     var value = $('#'+selector_id).val();
     $('#b'+dev_id).text(value);
-
     var settings  = JSON.parse(dev['meta']);
     settings['brightness'] = value;
     dev['meta'] = JSON.stringify(settings);

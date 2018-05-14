@@ -226,7 +226,7 @@ function refresh_dev_listeners(device)
             });
             $('#lamp-' + device["id"]).off().on('input', function (para) { 
 
-                lamp_slider(device["id"], this.id);
+                lamp_slider(device["id"], this.id, device);
                 
             });
             break;
@@ -237,7 +237,7 @@ function refresh_dev_listeners(device)
             });
             $('#oven-' + device["id"]).off().on('input', function (para) { 
             
-            oven_slider(device["id"], this.id, device);
+                oven_slider(device["id"], this.id, device);
             });
             $('#form-heat-' + device["id"]).off().change('click',function (){
 
@@ -259,7 +259,7 @@ function refresh_dev_listeners(device)
                 toggle(device,this);
             });            
             $('#ac-' + device["id"]).off().on('input', function (para) { 
-                ac_slider(device["id"], this.id);
+                ac_slider(device["id"], this.id, device);
             });
             $('#form-mode-' + device["id"]).off().change('click',function (){
 
@@ -293,7 +293,7 @@ function refresh_dev_listeners(device)
                 toggle(device,this);
             }); 
             $('#timer-' + device["id"]).off().on('input', function (para) {    
-            timer_slider(device["id"], this.id);
+                timer_slider(device["id"], this.id, device);
             });
             $('#form-timer-' + device["id"]).off().change('click',function (){
 
