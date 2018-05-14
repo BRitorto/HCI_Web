@@ -213,13 +213,14 @@ function refresh_dev_listeners(device)
 
     switch(device['typeId']){
         case "eu0v2xgprrhhg41g":
-            $('.blind-toggle').off().on('click', function (){
+            $('#'+device['id'] ).find('.blind-toggle').off().on('click', function (){
                 toggle_blind(device, this);
                 console.log('blind' + device);
             });
             
             break;
         case "go46xmbqeomjrsjr":
+            console.log($('#'+device['id'] ).find('.toggle'));
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
                 console.log('lamp' + device);
@@ -227,7 +228,9 @@ function refresh_dev_listeners(device)
             $('#lamp-' + device["id"]).off().on('input', function (para) { 
 
                 lamp_slider(device["id"], this.id, device);
-                
+            });
+            $('#form-lamp-'+ device['id']).off().change('click',function (){
+                update_setting(device,'color',$(this).val());
             });
             break;
         case "im77xxyulpegfmv8":
@@ -401,13 +404,13 @@ function load_lamp_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Color</h5>';
-    settings += '<input class="form-control settings-form" type="color" value="'+ prev_state['color']+'" >';
+    settings += '<input class="form-control settings-form" type="color" id="form-lamp-'+device['id'] +'" value="'+ prev_state['color']+'" >';
     settings += '<h5>Brightness</h5>';
     settings += '<div class="slidecontainer">';
     settings += '<input type="range" min="1" max="100" value="'+prev_state['brightness'] +'" class="slider" id=lamp-' + device['id']+'>';
@@ -428,7 +431,7 @@ function load_oven_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
 
@@ -480,7 +483,7 @@ function load_ac_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
     settings += '<div class="row">';
@@ -545,7 +548,7 @@ function load_door_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
     settings += '<div class="row">';
@@ -572,7 +575,7 @@ function load_timer_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
     settings += '<div class="row">';
@@ -604,7 +607,7 @@ function load_refrigerator_settings(device)
         settings += '<div class="settings" style="display:none">';
     }
     else{
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
     settings += '<div class="row">';
