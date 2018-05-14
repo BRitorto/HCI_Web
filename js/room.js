@@ -186,7 +186,7 @@ function post_device(device)
 function create_dev(device)
 {   
     var list = '#'+device['typeId'];
-    var dev = ' <li id="'+device['name']+'">';
+    var dev = ' <li id="'+device['id']+'">';
     dev += '<div class="card-header" id="heading' + device['name'] + '">';
     dev += '<h4 class="mb-0">';
     dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + device['name'] + '" aria-expanded="false" aria-controls="collapse'+ device['name'] +'">';
@@ -210,34 +210,80 @@ function create_dev(device)
 
 function refresh_dev_listeners(device)
 {
-    $('.blind-toggle').off().on('click', toggle_blind);
-    $('.toggle').off().on('click', toggle);
-    $('#lamp-' + device["id"]).off().on('input', function (para) { 
-        
-        lamp_slider(device["id"], this.id);
-     });
-     $('#oven-' + device["id"]).off().on('input', function (para) { 
-        
-        oven_slider(device["id"], this.id);
-     });
 
-     $('#ac-' + device["id"]).off().on('input', function (para) { 
-        
-        ac_slider(device["id"], this.id);
-     });
+    switch(device['typeId']){
+        case "eu0v2xgprrhhg41g":
+            $('.blind-toggle').off().on('click', function (){
+                toggle_blind(device, this);
+                console.log('blind' + device);
+            });
+            
+            break;
+        case "go46xmbqeomjrsjr":
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
+                toggle(device,this);
+                console.log('lamp' + device);
+            });
+            $('#lamp-' + device["id"]).off().on('input', function (para) { 
 
-     $('#timer-' + device["id"]).off().on('input', function (para) { 
+                lamp_slider(device["id"], this.id);
+                
+            });
+            break;
+        case "im77xxyulpegfmv8":
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
+                toggle(device,this);
+                console.log('oven' + device);
+            });
+            $('#oven-' + device["id"]).off().on('input', function (para) { 
+            
+            oven_slider(device["id"], this.id);
+            });
+            break;
+
+        case "li6cbv5sdlatti0j":
+            $('.toggle').off().on('click', function(){
+                toggle(device,this);
+            });            
+            $('#ac-' + device["id"]).off().on('input', function (para) { 
+                ac_slider(device["id"], this.id);
+            });
+            break;
+    
+        case "lsf78ly0eqrjbz91":
+            $('.toggle').off().on('click', function(){
+                toggle(device,this);
+            });
+            
+            break;
+            
+        case "ofglvd9gqX8yfl3l":
+              
+            $('.toggle').off().on('click', function(){
+                toggle(device,this);
+            }); 
+            $('#timer-' + device["id"]).off().on('input', function (para) {    
+            timer_slider(device["id"], this.id);
+            });
+            break;
+        case "rnizejqr2di0okho":
+            $('.toggle').off().on('click', function(){
+                toggle(device,this);
+            });
+            $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
+            
+            $('.toggle').off().on('click', toggle);    
+            refrigerator_slider(device["id"], this.id);
+            });
+            $('#freezer-' + device["id"]).off().on('input', function (para) { 
+            
+            freezer_slider(device["id"], this.id);
+            });
+            break;
         
-        timer_slider(device["id"], this.id);
-     });
-     $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
-        
-        refrigerator_slider(device["id"], this.id);
-     });
-     $('#freezer-' + device["id"]).off().on('input', function (para) { 
-        
-        freezer_slider(device["id"], this.id);
-     });
+    }
+
+    
 }
 
 
@@ -303,7 +349,7 @@ function load_blind_settings(device)
     if(status['mode'] == "down")
         settings = '<img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">';
    else
-        settings = '<img class="img-resposinve turned-on" src="./../images/switches-up.png">';
+        settings = '<img class="img-resposinve turned-on blind-toggle" src="./../images/switches-up.png">';
     return settings;
 }
 
@@ -312,12 +358,14 @@ function load_lamp_settings(device)
 {
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
-
-    settings += '<div class="settings">';
+        settings += '<div class="settings" style="display:block">';
+    }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Color</h5>';
@@ -337,12 +385,15 @@ function load_oven_settings(device)
 {
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
+        settings += '<div class="settings" style="display:block">';
+    }
 
-    settings += '<div class="settings">';
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Temperature</h5>';
@@ -386,12 +437,14 @@ function load_ac_settings(device)
 {
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
-
-    settings += '<div class="settings">';
+        settings += '<div class="settings" style="display:block">';
+    }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Temperature</h5>';
@@ -449,12 +502,14 @@ function load_door_settings(device)
 {
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
-
-    settings += '<div class="settings">';
+        settings += '<div class="settings" style="display:block">';
+    }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<div class="form-group">';
@@ -474,12 +529,14 @@ function load_timer_settings(device)
 {   
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
-    
-    settings += '<div class="settings">';
+        settings += '<div class="settings" style="display:block">';
+    }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Time</h5>';
@@ -504,12 +561,14 @@ function load_refrigerator_settings(device)
 {
     var settings;
     var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off')
+    if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-    else
+        settings += '<div class="settings" style="display:none">';
+    }
+    else{
         settings = '<img class="img-resposinve turned-on" src="./../images/switches-on.png">';
-    
-    settings += '<div class="settings">';
+        settings += '<div class="settings" style="display:block">';
+    }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>set freezer temperature</h5>';
