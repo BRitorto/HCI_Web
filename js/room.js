@@ -2,9 +2,7 @@ $(document).ready(function() {
     console.log( "ready!" );
     $('#add-device-form').on('click', '#save-button', add_device);
 
-    $.when(retrieve_device_types()).
-    then(show_device_types()).
-    then(get_devices());
+    retrieve_device_types();
 
     $('#current_room').text( "Room "+get_current_room_name());
     $('h1').text( "Room " + get_current_room_name());
@@ -50,6 +48,9 @@ function retrieve_device_types()
     $.getJSON( "http://127.0.0.1:8080/api/devicetypes", function( data ) {
     
         localStorage.setItem('dev_types', JSON.stringify(data["devices"]));
+    }).done(function (){
+        show_device_types();
+        get_devices();
     });
 }
 
@@ -236,7 +237,7 @@ function refresh_dev_listeners(device)
         case "im77xxyulpegfmv8":
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
-                console.log('oven' + device);
+                
             });
             $('#oven-' + device["id"]).off().on('input', function (para) { 
             
@@ -258,9 +259,10 @@ function refresh_dev_listeners(device)
             break;
 
         case "li6cbv5sdlatti0j":
-            $('.toggle').off().on('click', function(){
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
-            });            
+                
+            });           
             $('#ac-' + device["id"]).off().on('input', function (para) { 
                 ac_slider(device["id"], this.id, device);
             });
@@ -284,17 +286,19 @@ function refresh_dev_listeners(device)
             break;
     
         case "lsf78ly0eqrjbz91":
-            $('.toggle').off().on('click', function(){
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
+                
             });
             
             break;
             
         case "ofglvd9gqX8yfl3l":
               
-            $('.toggle').off().on('click', function(){
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
-            }); 
+                
+            });
             $('#timer-' + device["id"]).off().on('input', function (para) {    
                 timer_slider(device["id"], this.id, device);
             });
@@ -304,8 +308,9 @@ function refresh_dev_listeners(device)
             });
             break;
         case "rnizejqr2di0okho":
-            $('.toggle').off().on('click', function(){
+            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
+                
             });
             $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
             

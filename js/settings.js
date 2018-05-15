@@ -18,6 +18,7 @@ function toggle(dev,selector)
         $(selector).attr("class",  "img-resposinve turned-on");
         var settings  = JSON.parse(dev['meta']);
         settings['status'] = 'on';
+        settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         $.ajax({
             url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -41,6 +42,7 @@ function toggle(dev,selector)
         $(selector).attr("class",  "img-resposinve turned-off");
         var settings  = JSON.parse(dev['meta']);
         settings['status'] = 'off';
+        settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         $.ajax({
             url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -48,6 +50,7 @@ function toggle(dev,selector)
             contentType:"application/json",
             data:JSON.stringify(dev),
             success: function(result) {
+                console.log(result);
                 console.log('updated');
             },
             error: function(data){
@@ -66,6 +69,7 @@ function toggle_blind(dev, selector)
         $(selector).attr("class",  "img-resposinve turned-on blind-toggle");
         var settings  = JSON.parse(dev['meta']);
         settings['mode'] = 'up';
+        settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
         $.ajax({
@@ -88,6 +92,7 @@ function toggle_blind(dev, selector)
         $(selector).attr("class",  "img-resposinve turned-off blind-toggle");
         var settings  = JSON.parse(dev['meta']);
         settings['mode'] = 'down';
+        settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
         $.ajax({
@@ -116,7 +121,6 @@ function oven_slider(dev_id, selector_id,dev)
     $('#t'+ dev_id).text(value);
     var settings  = JSON.parse(dev['meta']);
     settings['temperature'] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
         url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -139,7 +143,6 @@ function lamp_slider(dev_id, selector_id,dev)
     $('#b'+dev_id).text(value);
     var settings  = JSON.parse(dev['meta']);
     settings['brightness'] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
     url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -161,7 +164,6 @@ function ac_slider(dev_id, selector_id, dev)
     $('#a'+ dev_id).text(value);
     var settings  = JSON.parse(dev['meta']);
     settings['temperature'] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
         url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -183,7 +185,6 @@ function timer_slider(dev_id, selector_id, dev)
     $('#c'+ dev_id).text(value + " seconds");
     var settings  = JSON.parse(dev['meta']);
     settings['time'] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
         url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -204,7 +205,6 @@ function refrigerator_slider(dev_id, selector_id,dev)
     $('#r'+ dev_id).text(value);
     var settings  = JSON.parse(dev['meta']);
     settings['refrigerator'] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
         url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,
@@ -224,7 +224,6 @@ function freezer_slider(dev_id, selector_id,dev)
     var value = $('#'+selector_id).val();
     $('#f'+ dev_id).text(value);
     var settings  = JSON.parse(dev['meta']);
-    settings['count'] = settings['count'] + 1;
     settings['freezer'] = value;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
@@ -245,7 +244,6 @@ function update_setting(dev, key, value)
 {
     var settings  = JSON.parse(dev['meta']);
     settings[key] = value;
-    settings['count'] = settings['count'] + 1;
     dev['meta'] = JSON.stringify(settings);
     $.ajax({
         url: 'http://127.0.0.1:8080/api/devices/'+ dev.id,

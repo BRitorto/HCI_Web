@@ -74,36 +74,78 @@ function get_all_devices()
     $.get('http://127.0.0.1:8080/api/devices/').done( function(data){
         var dev_arr = data['devices'];
         var new_most_used = [];
+        dev_arr.forEach(dev=>{
+            dev.meta =  JSON.parse(dev.meta);
+        });
 
         for(var i = 0; i < length_most_used; i++)
         {
-            var best = {'meta':{'count': 0}};
+            var best = {'meta':{'count':0}};
             dev_arr.forEach(dev=>{
-                var meta =  JSON.parse(dev.meta);
-                dev.meta = meta;
                 if(best.meta.count < dev.meta.count)
-                {
+                {   
                     best = dev;
                 }
             });
 
             dev_arr = dev_arr.slice(dev_arr.indexOf(best),1);
-
             var new_dev = {};
             new_dev.type = get_type(best);
             new_dev.room = get_room(best);
             new_dev.status =  best.meta.status;
+            new_most_used.push(new_dev);
         }
         console.log(most_used_devices);
         most_used_devices = new_most_used;
         console.log(new_most_used);
         load_most_used();
     });
-    
+     
+}
 
-    function get_type(dev)
-    {
-        $.get('http://127.0.0.1:8080/api/rooms')
-    }
 
+function get_type(dev)
+{
+    var return_value;
+    $.get('http://127.0.0.1:8080/api/devicetypes').done(
+        function (data){
+            data['devices'].forEach(type=>{
+                if(dev['typeId'] == type['id'])
+                    sessionStorage.setItem("type_name",type['name']);
+            });
+        }
+    );
+
+    return sessionStorage.getItem("type_name");
+}
+
+
+function get_room(dev)
+{
+    $.get('http://127.0.0.1:8080/api/rooms').done(
+        function(data){
+            data['rooms'].forEach(room =>{
+                if(dev_in_room(dev, room['id']))
+                    sessionStorage.setItem('room',room['name']);
+            });
+        }
+    );
+
+    return sessionStorage.getItem('room');
+}
+
+
+function dev_in_room(dev, room_id) 
+{ 
+    sessionStorage.setItem("is_room", false);
+    $.get('http://127.0.0.1:8080/api/rooms/'+room_id+'/devices').done(
+        function(data){
+            data['devices'].forEach(device=>{
+                if(device.id == dev.id)
+                    sessionStorage.setItem("is_room", true);
+            });
+        }
+    );
+
+    return sessionStorage.getItem("is_room");
 }
