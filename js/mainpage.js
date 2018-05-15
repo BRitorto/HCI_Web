@@ -6,6 +6,8 @@ var most_used_devices = [
      "room": "mia",
      "status":"OFF"}];
 
+var length_most_used = 3;
+
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
@@ -19,9 +21,7 @@ $(document).ready(function() {
     function addDevice(){
         $('#addDeviceFromMain').modal();
     }
-
-    load_most_used();
-
+    update_most_used();
 
 });
 
@@ -39,6 +39,7 @@ function load_most_used()
     {
         return;
     }
+
     console.log("loding most used devices...");
     most_used_devices.forEach(element => {
         console.log("creating new device");
@@ -61,3 +62,48 @@ function create_new_device(device)
     
 }
 
+
+function update_most_used()
+{
+    get_all_devices();
+}
+
+
+function get_all_devices()
+{
+    $.get('http://127.0.0.1:8080/api/devices/').done( function(data){
+        var dev_arr = data['devices'];
+        var new_most_used = [];
+
+        for(var i = 0; i < length_most_used; i++)
+        {
+            var best = {'meta':{'count': 0}};
+            dev_arr.forEach(dev=>{
+                var meta =  JSON.parse(dev.meta);
+                dev.meta = meta;
+                if(best.meta.count < dev.meta.count)
+                {
+                    best = dev;
+                }
+            });
+
+            dev_arr = dev_arr.slice(dev_arr.indexOf(best),1);
+
+            var new_dev = {};
+            new_dev.type = get_type(best);
+            new_dev.room = get_room(best);
+            new_dev.status =  best.meta.status;
+        }
+        console.log(most_used_devices);
+        most_used_devices = new_most_used;
+        console.log(new_most_used);
+        load_most_used();
+    });
+    
+
+    function get_type(dev)
+    {
+        $.get('http://127.0.0.1:8080/api/rooms')
+    }
+
+}

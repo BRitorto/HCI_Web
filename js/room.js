@@ -105,19 +105,19 @@ function get_meta_for_dev(typeId)
 {
     switch(typeId){
         case "eu0v2xgprrhhg41g":
-            return {'mode': 'down'};
+            return {'mode': 'down', 'count': 0};
         case "go46xmbqeomjrsjr":
-            return {'status':'off','color':'#563d7c', 'brightness':'50'};
+            return {'status':'off','color':'#563d7c', 'brightness':'50', 'count':0};
         case "im77xxyulpegfmv8":
-            return {'status':'off', 'temperature':'180','heat':'conventional','grill':'large','convection':'normal'};
+            return {'status':'off', 'temperature':'180','heat':'conventional','grill':'large','convection':'normal' , 'count':0};
         case "li6cbv5sdlatti0j":
-            return {'status':'off','temperature':'24','mode':'cool','vertical_swing':'auto','horizontal_swing':'auto','fan':'auto'};
+            return {'status':'off','temperature':'24','mode':'cool','vertical_swing':'auto','horizontal_swing':'auto','fan':'auto' , 'count':0};
         case "lsf78ly0eqrjbz91":
-            return {'status':'close','lock':'off'};
+            return {'status':'close','lock':'off' , 'count':0};
         case "ofglvd9gqX8yfl3l":
-            return {'status':'off','time':'0'};
+            return {'status':'off','time':'0' , 'count':0};
         case "rnizejqr2di0okho":
-            return {'status':'off','freezer':'-10','refrigerator':'4','mode':'default'};
+            return {'status':'off','freezer':'-10','refrigerator':'4','mode':'default' , 'count':0};
         
     }
 }
