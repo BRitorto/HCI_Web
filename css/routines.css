@@ -6,7 +6,7 @@ body {
     background:url("https://image.ibb.co/fhZBOn/bg1.png") fixed;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
+      background-position: center;
     color: #262626;
   }
   
@@ -58,61 +58,68 @@ body {
   .breadcrumb a:hover{
       color: white;
   }
-
-/* Buttons and Icons */
-
-.icon{
-	width: 30px;
-	height: 30px;
-}
-
-.btn-default{
-	margin-left: 10px;
-}
-
-.btn-outline-dark:hover{
-	background: #233d4d;
-}
-
-.btn-primary{
-	background: #233d4d;
-}
   
-.btn-primary:hover{
-	background: #182a34;
-}
-
-.btn-link{
-	color: #262626;
-	font-size: 20px;
-}
-
-.btn-link:hover{
-	color: #233d4d;
-}
-
-.btn-outline-dark{
-	margin-left: 10px;
-}
-
-.search{
-	background: #233d4d !important;
-}
-
-/* Cards and Columns */
-
-.col{
-	padding-left: 2%;
-	padding-right: 2%;
-}
-
-.main-card{
-	background: white;
-	margin-bottom: 2rem;
-	border-color: #233d4d;
-    border-width: 5px;
-    min-height: 300px;
-}
-
-
+  /* Cards and Columns */
+  
+  .col{
+      padding-left: 2%;
+      padding-right: 2%;
+  }
+  
+  .card{
+      background: white;
+      margin-bottom: 2rem;
+      border-color: #233d4d;
+      border-width: 5px;
+  }
+  
+  /* List */
+  
+  .list-group-item{
+      height: 70px;
+      font-size: 20px;
+  }
+  
+  .list-group-item:hover{
+      background: #233d4d;
+      color: white;
+  }
+  
+  .list-group-item.active{
+      background: #233d4d;
+      border-color: #233d4d;
+  }
+  
+  .list-group{
+      margin-top: 1rem;
+  }
+  
+  /* Buttons and Icons */
+  
+  .icon{
+      width: 30px;
+      height: 30px;
+  }
+  
+  .btn-default{
+      margin-left: 10px;
+  }
+  
+  .btn-outline-dark:hover{
+      background: #233d4d;
+  }
+  
+  .btn-primary{
+      background: #233d4d;
+  }
+    
+    .btn-primary:hover{
+      background: #182a34;
+  }
+  
+  .search{
+      background: #233d4d !important;
+  }
+  
+  
   
