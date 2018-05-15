@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="./../css/add-routine.css">
+
+    <title>Routines</title>
+</head>
+<body>
+
+<!-- Navigation -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+      <a class="navbar-brand" href="./mainpage.html">
+        <img src="./..//images/logoblancosmall.png" class="img-fluid" alt="Main Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="./rooms.html">Rooms</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Routines</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Help</a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" type="text">
+          <button type="submit" class="btn btn-default search float-right">
+            <img class= "icon" src="./../images/magnifier.svg"/> 
+          </button> 
+        </form>
+      </div>
+    </nav>
+
+<!--  Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Routines</li>
+      </ol>
+    </nav>
+
+<!-- Main body -->
+    <main role="main" class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <div class="main-card card">
+            <div class="card-body">
+              <ul class="nav nav-tabs nav-fill">
+                  <li class="nav-item">
+                    <a class="nav-link show active" data-toggle="tab" href="#name"  id="name-tab">Name</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" data-toggle="tab" href="#rooms" id="rooms-tab">Rooms</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" data-toggle="tab" href="#devices" id="devices-tab">Devices</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" data-toggle="tab" href="#settings" id="settings-tab">Settings</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link disabled" data-toggle="tab" href="#schedule" id="schedule-tab">Schedule</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                  <div class="tab-pane fade show active" id="name" role="tabpanel" aria-labelledby="name">
+                    <div class="row justify-content-center">
+                      <div class="col-md-4 col-md-offset-7">
+                        <h2 class="text-center" >Enter new routine name</h2>
+                       </div>
+                    </div>
+                    <div class="row justify-content-center">
+                      <div class="col-md-4 col-md-offset-7">
+                        <form id="name-form">
+                          <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="routine-name">
+                        </form>
+                      </div>
+                    </div>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next1" data-toggle="tab" href="#rooms">Next</button>
+                </div>
+
+                <div class="tab-pane fade show" id="rooms" role="tabpanel" aria-labelledby="rooms">
+                    <div class="row">
+                      <div class="col-md-9">
+                        <h2>Choose rooms to add</h2>
+                       </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-4">
+                          <ul class="choose-rooms list-unstyled" >
+                            <li>
+                              <input type="checkbox" id="check-all">
+                              <label for="check-all">
+                                Choose all
+                              </label>
+                            </li>                  
+                          </ul>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next2">Next</button>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev1">Previous</button>
+              </div>
+
+              <div class="tab-pane fade show" id="devices" role="tabpanel" aria-labelledby="devices">
+                <div class="row">
+                  <div class="col-md-9">
+                    <h2>Choose devices to add</h2>
+                  </div>
+                </div>
+                <ul class="list-unstyled" id="selected-rooms"> 
+                </ul>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next3">Next</button>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev2">Previous</button>
+              </div>
+
+              <div class="tab-pane fade show" id="settings" role="tabpanel" aria-labelledby="settings">
+                  <div class="row">
+                    <div class="col-md-9">
+                      <h2>Choose what to do with each device</h2>
+                    </div>
+                  </div>
+                  <ul class="list-unstyled" id="selected-rooms-and-devs"> 
+
+                  </ul>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next4">Next</button>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev4">Previous</button>
+                </div>
+
+          </div>
+        </div> 
+      </div>
+    </main>
+
+              
+  <!--Copyright-->
+  <div class="footer">
+    <p class="text-secondary">Copyright 2018 HCI</p>
+  </div>
+
+
+  <!-- /.container -->
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="./../js/add-routine.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  
+
+</body>

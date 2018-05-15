@@ -1,193 +1,98 @@
-var selected_rooms = new Array();
-var all_rooms = new Array();
-var routine = {}
+var page_ready = false;
+
 
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
 
-    $("#check-all").on('click', check_all);
-    $("#next1").on('click', put_name);
-    $("#next2").on('click', save_selected_rooms);
+    $.getJSON( "http://127.0.0.1:8080/api/routines").done(function(data) {
+        load_routines(data['routines']);
+        $('.routine').off().on('click', function(data){
+            set_current_routine(data["target"].id);
+        });
+        $('button.delete-routine').on('click', delete_routine);
+        });
+    });
 
 
-    //$("#previous1").on('click', refresh_rooms);
-    //$("#previous2").on('click', refresh_devices);
-    // al final hacer essto document.getElementById("name-form").reset();
 
-});
-
-function put_name()
+function delete_routine()
 {
-    var name = $("#routine-name").val();
-    if (name.length < 4)
-    {
-        alert("mal nombre");
-    }
-    else 
-    {
-        routine.name = name;
-    }
-    $("#name-tab").attr('class', 'nav-link disabled');
-    $("#rooms-tab").attr('class', 'nav-link active show');
-    $("#name").attr('class', 'tab-pane fade show');
-    $("#rooms").attr('class', 'tab-pane fade show active');
-    
-    get_rooms();
+    $(this).closest("li").hide();
+    var id_value = $(this).closest("li").attr("data-child");
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/routines/'+ id_value,
+        type: 'DELETE',
+        success: function(response) {
+          console.log("delete!");
+          get_routines();
+        }
+     });
 }
 
-function check_all()
+function set_current_routine(routine_id)
 {
-    $(".form-check-input").prop('checked', $(this).prop('checked'));
+    console.log(routine_id);
+    sessionStorage.setItem("current_routine",routine_id );
+    $.get("http://127.0.0.1:8080/api/routines/"+ routine_id,function (data){
+        sessionStorage.setItem("current_routine_name",data['routine']["id"]);
+    });
 }
 
+// needed for every function in this file
 function check_page_status()
 {
     return page_ready;
 }
 
-function get_rooms()
+function get_routines()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/rooms", function( data ) {
-    
-        load_rooms(data['rooms']);
+    $.getJSON( "http://127.0.0.1:8080/api/routines", function( data ) {
+        load_routines(data['routines']);
     });
 }
 
-function load_rooms(rooms)
+function clear_displaying_routines()
+{
+    var routines = $("li.list-group-item").remove();
+}
+
+
+function load_routines(routines)
 {
     if(!check_page_status)
     {
         return;
     }
-    rooms.forEach(room => {
-        var new_checkbox = create_new_checkbox(room);
-        $(".choose-rooms").append(new_checkbox);
-        all_rooms.push(room);
+    clear_displaying_routines();
+    console.log(routines);
+    routines.forEach(routine => {
+        create_new_routine(routine);
+        console.log("creating new routine");
     });
-}
-
-function create_new_checkbox(room)
-{
-    var new_checkbox = '<li>';
-    new_checkbox += '<input class="form-check-input" type="checkbox" id="'+room['id']+'">';
-    new_checkbox += '<label class="form-check-label" for="'+room['name']+'">';
-    new_checkbox += '<h5>';
-    new_checkbox += room['name'];
-    new_checkbox += '<h5>'
-    new_checkbox += '</label></li>';
-
-    return new_checkbox;
-}
-
-function save_selected_rooms()
-{
-    all_rooms.forEach(room => {
-        if ($('#'+room['id']+'').is(':checked'))
-        {
-            selected_rooms.push(room);
-        }
-    });
-
-    select_devices();
-    $("#rooms-tab").attr('class', 'nav-link disabled');
-    $("#devices-tab").attr('class', 'nav-link active show');
-    $("#rooms").attr('class', 'tab-pane fade show');
-    $("#devices").attr('class', 'tab-pane fade show active');
-}
-
-function retrieve_device_types()
-{
-    $.getJSON( "http://127.0.0.1:8080/api/devicetypes", function( data ) {
     
-        localStorage.setItem('dev_types', JSON.stringify(data["devices"]));
-    });
 }
 
-function select_devices()
+function create_new_routine(routine)
 {
-    selected_rooms.forEach(room => {
-        display_room(room);
-        var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+room['id']+"/devices",function (data) {
-            create_types(data['devices'], room);
-          });
-    });
-}
+    var new_dev = '<li class="list-group-item list-group-item-action" data-child='+ routine['id'] +' >';
 
-function create_types(devices, room)
-{
-    var aux = new Array();
-    devices.forEach(device =>{
-        aux.push(device['typeId']);
-    });
+    new_dev = new_dev + '<a href="./routine.html" class="routine" id="' + routine['id'] + '">';
+    new_dev = new_dev + routine['name'];
+    new_dev  = new_dev + '</a>';
 
-    var types = new Set(aux);
-    types.forEach(type =>{
-        display_type(type, room);
-    });
-    display_devices(devices, room);
-}
-
-function display_devices(devices, room)
-{
-    devices.forEach(device =>{
-        display_device(device, room);
-    });
-}
-
-function display_room(room)
-{
-    var new_room = '<li id="'+room['name']+'">';
-    new_room += '<div class="row">';
-    new_room += '<div class="col-md-4">';
-    new_room += '<h4>'+room['name']+'</h4>';
-    new_room += '<ul id="'+room['name']+'-types">';
-    new_room += '</ul>';
-    new_room += '</div></div>';
+    new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-routine">';
+    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"></img>' ;
+    new_dev = new_dev + '</button>';
     
-    $("#selected-rooms").append(new_room);
+    new_dev =new_dev + '</li> ';
+    $("#list-of-routines").append(new_dev);
 }
 
-function display_type(type, room)
+function refresh_handlers()
 {
-    var selected_room = '#'+room['name']+'-types';
-    var new_type = '<li>';
-    new_type += get_type_name(type);
-    new_type += '<ul id= "'+type+'-devices" class="list-unstyled">';
-    new_type += '</ul>';
-    new_type += '</li>';
-
-    $(selected_room).append(new_type);
-}
-
-function display_device(device, room)
-{
-    var new_device = create_new_checkbox(device);
-
-    var selected_room = '#'+room['name']+'-types';
-    var selected_type = '#'+device['typeId']+'-devices';
-    $(selected_room).find(selected_type).append(new_device);
-}
-
-function get_type_name(id)
-{
-    switch(id)
-    {
-        case 'eu0v2xgprrhhg41g': 
-            return 'Blinds';
-        case 'go46xmbqeomjrsjr':
-            return 'Lamps';
-        case 'im77xxyulpegfmv8':
-            return 'Ovens';
-        case 'li6cbv5sdlatti0j':
-            return 'Air Conditioners';
-        case 'lsf78ly0eqrjbz91':
-            return 'Doors';
-        case 'mxztsyjzsrq7iaqc':
-            return 'Alarm';
-        case 'ofglvd9gqX8yfl3l':
-            return 'Timer';
-        case 'rnizejqr2di0okho':
-            return 'Refrigerator';
-    }
+    $('.delete-routine').off().on("click",delete_routine);
+    $('.routine').off().on('click', function(data){
+        set_current_routine(data["target"].id);
+    });
 }
