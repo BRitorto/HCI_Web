@@ -293,11 +293,12 @@ function refresh_dev_listeners(device)
                 console.log('lamp' + device);
             });
             $('#lamp-' + device["id"]).off().on('input', function (para) { 
-
+                
                 lamp_slider(device["id"], this.id, device);
             });
-            $('#form-lamp-'+ device['id']).off().change('click',function (){
-                update_setting(device,parseInt($(this).find(':selected').attr('value')),'setColor');
+
+            $('#form-lamp-'+ device['id']).off().change('click',function(){
+                update_setting(device,$(this).val(),'setColor');
             });
             break;
         case "im77xxyulpegfmv8":
@@ -313,7 +314,6 @@ function refresh_dev_listeners(device)
                 update_setting(device,$(this).val(), 'setHeat');
             });
             $('#form-grill-' + device["id"]).off().change(function (){
-               console.log()
                 update_setting(device,$(this).val(),'setGrill');
             });
             $('#form-convection-' + device["id"]).off().change(function (){
