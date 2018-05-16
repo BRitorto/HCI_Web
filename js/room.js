@@ -574,7 +574,7 @@ function load_oven_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set heat</h5>';
     var state = (prev_state['heat']== null)? 'not setted' : prev_state['heat'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '">';
     settings += '<option value ="conventional" > Conventional</option>';
     settings += '<option value="bottom" >Bottom</option>';
@@ -584,7 +584,7 @@ function load_oven_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set Grill</h5>';
     state = (prev_state['grill']== null)? 'not setted' : prev_state['grill'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + '" value="'+prev_state['grill'] +'" ">';
     settings += '<option value="large" >Large</option>';
     settings += '<option value="eco" >Eco</option>';
@@ -594,7 +594,7 @@ function load_oven_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set Convection</h5>';
     state  = (prev_state['convection']== null)? 'not setted' : prev_state['convection'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + '" value="'+prev_state['convection'] +'" ">';
     settings += '<option value="normal" >Normal</option>';
     settings += '<option value="eco" >Eco</option>';
@@ -630,7 +630,7 @@ function load_ac_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
     var state = (prev_state['mode']== null)? 'not setted' : prev_state['mode'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + '" value="'+prev_state['mode'] +'" ">';
     settings += '<option value="cool" >Cool</option>';
     settings += '<option value="heat" >Heat</option>';
@@ -640,7 +640,7 @@ function load_ac_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set vertical swing</h5>';
     state = (prev_state['verticalSwing']== null)? 'not setted' : prev_state['verticalSwing'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + '" value="'+prev_state['vertical_swing'] +'" ">';
     settings += '<option value="auto">Auto</option>';
     settings += '<option value="22" >22</option>';
@@ -652,7 +652,7 @@ function load_ac_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set horizontal swing</h5>';
     state = (prev_state['horizontalSwing']== null)? 'not setted' : prev_state['horizontalSwing'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + '" value="'+prev_state['horizontal_swing'] +'" ">';
     settings += '<option>Auto</option>';
     settings += '<option value="-90">- 90</option>';
@@ -665,7 +665,7 @@ function load_ac_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set fan speed</h5>';
     state = (prev_state['fanSpeed']== null)? 'not setted' : prev_state['fanSpeed']
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + '" value="'+prev_state['fan'] +'" ">';
     settings += '<option value="auto">Auto</option>';
     settings += '<option value ="25">25</option>';
@@ -697,7 +697,7 @@ function load_door_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set lock</h5>';
     state = (prev_state['lock']== null)? 'not setted' : prev_state['lock'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + '"  value="'+ prev_state['lock']+ '">';
     settings += '<option value ="lock">Lock</option>';
     settings += '<option value="unlock">Unlock</option>';
@@ -730,7 +730,7 @@ function load_timer_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set Alarm</h5>';
     var state = (prev_state['status']== null)? 'not setted' : prev_state['status'];
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + '" value="'+ prev_state['status'] +'">';
     settings += '<option value="start">Start</option>';
     settings += '<option value="stop">Stop</option>';
@@ -763,7 +763,7 @@ function load_refrigerator_settings(device,prev_state)
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
     var state = (prev_state['mode']== null)? 'not setted' : prev_state['mode']
-    settings += '<h6>'+ state +'</h6>';
+    settings += '<h6>Current state : '+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + '" value="'+ prev_state['mode']+'">';
     settings += '<option value="default">Default</option>';
     settings += '<option value="vacation">Vacations</option>';
