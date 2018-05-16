@@ -1,8 +1,9 @@
 var selected_rooms = new Array();
 var all_rooms = new Array();
-var selected_devices_per_room = new Array();
-var devices_per_room = new Array();
-var routine = {}
+var selected_devices_per_room = [];
+var selected_devices = [];
+var devices_per_room = [];
+var name;
 
 $(document).ready(function() {
     console.log( "ready!" );
@@ -12,6 +13,7 @@ $(document).ready(function() {
     $("#next1").on('click', save_name);
     $("#next2").on('click', save_selected_rooms);
     $("#next3").on('click', save_selected_devices);
+    $("#next4").on('click', save_actions);
 
 
 
@@ -20,6 +22,34 @@ $(document).ready(function() {
     // al final hacer essto document.getElementById("name-form").reset();
 
 });
+
+function save_actions()
+{
+    console.log('soy malo');
+    finished = true;
+    selected_devices.forEach(element=>{
+        get_actions(element.device);
+    });
+
+    console.log(selected_devices);
+    
+    /*selected_devices_per_room.forEach(room =>{
+        room.devices.forEach(device =>{
+            var actions = {
+                'deviceid': device['id'],
+                'actions': get_actions(device)
+            }
+        });
+    });
+
+    var routine =
+    {
+        "name": name,
+        "actions": null,
+        "meta": "{}",
+    }*/
+}
+
 
 function save_name()
 {
@@ -30,7 +60,7 @@ function save_name()
     }
     else 
     {
-        routine.name = name;
+        name = name;
     }
     $("#name-tab").attr('class', 'nav-link disabled');
     $("#rooms-tab").attr('class', 'nav-link active show');
@@ -102,30 +132,28 @@ function save_selected_rooms()
 function save_selected_devices()
 {
     var first;
-    var selected = {
-        'room': null,
-        'devices': new Array()
-    }
 
-    devices_per_room.forEach(room =>{
+    devices_per_room.forEach(element =>{
+        var aux = {};
         first = true;
-        if (room.devices.length > 0)
-        {
-            room.devices.forEach(device =>{
-                if ($('#'+device['id']+'').is(':checked'))
+        element.devices.forEach(device =>{
+            if ($('#'+device['id']+'').is(':checked'))
+            {
+                if (first)
                 {
-                    if (first)
-                    {
-                        console.log('selecciono los selected');
-                        selected.room = room.room;
-                        first = false;
-                    }
-                    selected.devices.push(device);
+                    aux.room = element.room;
+                    aux.devices = new Array();
+                    first = false;
                 }
-                
-            });
-            selected_devices_per_room.push(selected);
-        }
+                aux.devices.push(device);
+                var dev = {
+                    'device': device,
+                    'actions': new Array()
+                }
+                selected_devices.push(dev);
+            }
+        });
+        selected_devices_per_room.push(aux);
     });
 
     $("#devices-tab").attr('class', 'nav-link disabled');
@@ -139,13 +167,13 @@ function save_selected_devices()
 function show_actions()
 {
     selected_devices_per_room.forEach(element=>{
-        console.log(element);
         var new_room = display_room_and_settings(element.room);
         $("#selected-rooms-and-devs").append(new_room);
 
         element.devices.forEach(device=>{
             var new_device = display_device_and_settings(device);
             $("#"+element.room['name']+"-devices").append(new_device);
+            refresh_dev_listeners(device);
         })
     })
 }
@@ -163,7 +191,7 @@ function select_devices()
     selected_rooms.forEach(room => {
         var new_room = display_room(room);
         $("#selected-rooms").append(new_room);
-        var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+room['id']+"/devices",function (data) {
+        var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+room['id']+"/devices").done(function (data) {
             var room_array = {
                 'room':room,
                 'devices':data['devices']
@@ -241,11 +269,8 @@ function display_device_and_settings(device)
     new_device += device['name'];
     new_device += '</h4>';
     new_device += load_settings(device);
-
     new_device += '</div>';
     new_device += '</li>';
-
-
 
     return new_device;
 }
@@ -268,8 +293,6 @@ function load_settings(device)
             return load_timer_settings(device);
         case "rnizejqr2di0okho":
             return load_refrigerator_settings(device);
-        
-
     } 
 }
 
@@ -277,7 +300,7 @@ function load_blind_settings(device)
 {
     var settings = '<div class="form-group">';
     settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-blind-state-' + device["id"] + ' value=" ">';
+    settings += '<select class="form-control settings-form" id="form-blind-state-' + device["id"] + '" value=" ">';
     settings += '<option>up</option>';
     settings += '<option>down</option>';
     settings += '</select>';
@@ -302,8 +325,8 @@ function load_lamp_settings(device)
     settings += '<input class="form-control settings-form" type="color" value="" >';
     settings += '<h5>Brightness</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="1" max="100" value="" class="slider" id=lamp-' + device['id']+'>';
-    settings += '<span id="b'+ device['id'] +'">'+'VALUE' +'</span>';
+    settings += '<input type="range" min="1" max="100" value="50" class="slider" id=lamp-' + device['id']+'>';
+    settings += '<span id="b'+ device['id'] +'">'+'50' +'</span>';
     settings += '</div>';
     settings += '</div>';
     settings += '</div>';
@@ -318,19 +341,19 @@ function load_oven_settings(device)
     settings += '<div class="col-8">';
     settings += '<div class="form-group">';
     settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-lamp-state-' + device["id"] + ' value=" ">';
+    settings += '<select class="form-control settings-form" id="form-oven-state-' + device["id"] + '" value=" ">';
     settings += '<option>off</option>';
     settings += '<option>on</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<h5>Temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="90" max="230" value="" class="slider" id=oven-' + device['id']+'>';
-    settings += '<span id="t'+ device['id'] +'">'+ 'VALUE'+'</span>';
+    settings += '<input type="range" min="90" max="230" value="" class="slider" id="oven-' + device["id"]+'">';
+    settings += '<span id="t'+ device["id"] +'"></span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set heat</h5>';
-    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '" value=" ">';
     settings += '<option>conventional</option>';
     settings += '<option>bottom</option>';
     settings += '<option>top</option>';
@@ -338,7 +361,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set grill</h5>';
-    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + '" value=" ">';
     settings += '<option>large</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -346,7 +369,7 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set convection</h5>';
-    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + '" value="">';
     settings += '<option>normal</option>';
     settings += '<option>eco</option>';
     settings += '<option>off</option>';
@@ -367,19 +390,19 @@ function load_ac_settings(device)
     settings += '<div class="col-8">';
     settings += '<div class="form-group">';
     settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-lamp-state-' + device["id"] + ' value=" ">';
+    settings += '<select class="form-control settings-form" id="form-ac-state-' + device["id"] + '" value=" ">';
     settings += '<option>off</option>';
     settings += '<option>on</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<h5>Temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="18" max="38" value="" class="slider" id=ac-' + device['id']+'>';
-    settings += '<span id="a'+ device['id'] +'">'+ 'VALUE'+'</span>';
+    settings += '<input type="range" min="18" max="38" value="" class="slider" id="ac-' + device['id']+'">';
+    settings += '<span id="a'+ device['id'] +'">'+ ''+'</span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set mode</h5>';
-    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + '" value=" ">';
     settings += '<option>cool</option>';
     settings += '<option>heat</option>';
     settings += '<option>fan</option>';
@@ -387,7 +410,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set vertical swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + '" value=" ">';
     settings += '<option>Auto</option>';
     settings += '<option>22</option>';
     settings += '<option>45</option>';
@@ -397,7 +420,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set horizontal swing</h5>';
-    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + '" value=" ">';
     settings += '<option>Auto</option>';
     settings += '<option>- 90</option>';
     settings += '<option>- 45</option>';
@@ -408,7 +431,7 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set fan speed</h5>';
-    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + ' value="" ">';
+    settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + '" value=" ">';
     settings += '<option>Auto</option>';
     settings += '<option>25</option>';
     settings += '<option>50</option>';
@@ -429,47 +452,16 @@ function load_door_settings(device)
     settings += '<div class="col-8">';
     settings += '<div class="form-group">';
     settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-lamp-state-' + device["id"] + ' value=" ">';
-    settings += '<option>off</option>';
-    settings += '<option>on</option>';
+    settings += '<select class="form-control settings-form" id="form-door-state-' + device["id"] + '" value=" ">';
+    settings += '<option>open</option>';
+    settings += '<option>close</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set lock</h5>';
-    settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + ' value="">';
+    settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + '" value="">';
     settings += '<option>On</option>';
     settings += '<option>Off</option>';
-    settings += '</select>';
-    settings += '</div>';
-    settings += '</div>';
-    settings += '</div>';
-    settings += '</div>';
-    return settings;
-}
-
-function load_timer_settings(device)
-{   
-
-    var settings = '<div class="settings">';
-    settings += '<div class="row">';
-    settings += '<div class="col-8">';
-    settings += '<div class="form-group">';
-    settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-lamp-state-' + device["id"] + ' value=" ">';
-    settings += '<option>off</option>';
-    settings += '<option>on</option>';
-    settings += '</select>';
-    settings += '</div>';
-    settings += '<h5>Time</h5>';
-    settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="0" max="21474836" value="" class="slider" id=timer-' + device['id']+'>';
-    settings += '<span id="c'+ device['id'] +'"></span>';
-    settings += '</div>';
-    settings += '<div class="form-group">';
-    settings += '<h5>Set alarm</h5>';
-    settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + ' value="">';
-    settings += '<option>Start</option>';
-    settings += '<option>Stop</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -483,26 +475,19 @@ function load_refrigerator_settings(device)
     var settings = '<div class="settings">';
     settings += '<div class="row">';
     settings += '<div class="col-8">';
-    settings += '<div class="form-group">';
-    settings += '<h5>Set state</h5>';
-    settings += '<select class="form-control settings-form" id="form-lamp-state-' + device["id"] + ' value=" ">';
-    settings += '<option>off</option>';
-    settings += '<option>on</option>';
-    settings += '</select>';
-    settings += '</div>';
     settings += '<h5>Set freezer temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="-20" max="-10" value="" class="slider" id=freezer-' + device['id']+' >';
-    settings += '<span id="f'+ device['id'] +'">' + 'VALUE'+ '</span>';
+    settings += '<input type="range" min="-20" max="-10" value="" class="slider" id="freezer-' + device['id']+'" >';
+    settings += '<span id="f'+ device['id'] +'">' + ''+ '</span>';
     settings += '</div>';
     settings += '<h5>Set refrigerator temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="2" max="8" value="" class="slider" id=refrigerator-' + device['id']+'>';
-    settings += '<span id="r'+ device['id'] +'">' + 'VALUE'+ '</span>';
+    settings += '<input type="range" min="2" max="8" value="" class="slider" id="refrigerator-' + device['id']+'">';
+    settings += '<span id="r'+ device['id'] +'">' + ''+ '</span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set mode</h5>';
-    settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + ' value="">';
+    settings += '<select class="form-control settings-form" id="form-refri-mode-' + device["id"] + '" value="">';
     settings += '<option>Default</option>';
     settings += '<option>vacations</option>';
     settings += '<option>party</option>';
@@ -545,4 +530,51 @@ function get_type_name(id)
         case 'rnizejqr2di0okho':
             return 'Refrigerator';
     }
+}
+
+
+
+function refresh_dev_listeners(device)
+{
+    switch(device['typeId']){
+        case "eu0v2xgprrhhg41g":
+            
+            break;
+        case "go46xmbqeomjrsjr":
+
+            $('#lamp-' + device["id"]).off().on('input', function (para) { 
+                lamp_slider(device["id"], this.id, device);
+            });
+
+            break;
+        case "im77xxyulpegfmv8":
+
+            $('#oven-' + device["id"]).off().on('input', function (para) {
+                oven_slider(device["id"], this.id, device);
+            });
+
+            break;
+
+        case "li6cbv5sdlatti0j":
+       
+            $('#ac-' + device["id"]).off().on('input', function (para) { 
+                ac_slider(device["id"], this.id, device);
+            });
+            break;
+    
+        case "lsf78ly0eqrjbz91":
+
+            break;
+
+        case "rnizejqr2di0okho":
+            $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
+                refrigerator_slider(device["id"], this.id, device);
+            });
+            $('#freezer-' + device["id"]).off().on('input', function (para) { 
+                freezer_slider(device["id"], this.id, device);
+            });
+            break;
+        
+    }
+    
 }
