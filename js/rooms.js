@@ -226,9 +226,6 @@ function delete_room()
         $.ajax({
             url: base_api+'rooms/'+ id_value,
             type: 'DELETE',
-            success: function(response) {
-              get_rooms();
-            },
             error:function(data){
                 var response =  JSON.parse((data['responseText']));
                 switch(response.error.code){
@@ -248,7 +245,11 @@ function delete_room()
                         break;
                 }
             }
-         });
+         }).done(
+            function(){
+                get_rooms();
+            }
+         );
 
 
     });
