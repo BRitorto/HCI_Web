@@ -58,7 +58,7 @@ function save_actions()
 function post_routine()
 {
     $.ajax({
-        url: 'http://127.0.0.1:8080/api/routines/',
+        url: base_api+'routines/',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json; charset=utf-8 ',
@@ -107,7 +107,7 @@ function check_page_status()
 
 function get_rooms()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/rooms", function( data ) {
+    $.getJSON( base_api+"rooms", function( data ) {
     
         load_rooms(data['rooms']);
     });
@@ -215,7 +215,7 @@ function select_devices()
     selected_rooms.forEach(room => {
         var new_room = display_room(room);
         $("#selected-rooms").append(new_room);
-        var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+room['id']+"/devices").done(function (data) {
+        var device_list = $.get(base_api+"rooms/"+room['id']+"/devices").done(function (data) {
             var room_array = {
                 'room':room,
                 'devices':data['devices']
