@@ -228,11 +228,11 @@ function add_room(name, dev_name, dev_type)
                 alert('bad input, try only alfanumeric names');
                 break;
             case 2:
-                alert('codigo 2');
+                alert('The name is already in use, try another one');
                 break;
 
             case 3:
-                alert("codigo 3");
+                alert("There was a problem with the server. Try reloading the page");
                 break;
 
             case 4:
