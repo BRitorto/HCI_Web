@@ -53,9 +53,6 @@ function save_actions()
     })
     routine.actions = (JSON.stringify(array));
     post_routine();
-    document.getElementById("name-form").reset();
-
-    console.log(JSON.stringify(routine));
 }
 
 function post_routine()
@@ -67,7 +64,8 @@ function post_routine()
         contentType: 'application/json; charset=utf-8 ',
         data: JSON.stringify(routine),
         success: function(response) {
-            console.log("posted!");
+            alert("Routine posted successfully!");
+            location.href = "./routines.html"
         },
         error: function(response){
             console.log(response['responseText']);
@@ -82,6 +80,7 @@ function save_name()
     if (name.length < 4)
     {
         alert("mal nombre");
+        return;
     }
     else 
     {
@@ -324,12 +323,15 @@ function load_settings(device)
 function load_blind_settings(device)
 {
     var settings = '<div class="form-group">';
+    settings += '<div class="col-8">';
     settings += '<h5>Set state</h5>';
     settings += '<select class="form-control settings-form" id="form-blind-state-' + device["id"] + '" value=" ">';
     settings += '<option>up</option>';
     settings += '<option>down</option>';
     settings += '</select>';
     settings += '</div>';
+    settings += '</div>';
+
 
     return settings;
 }

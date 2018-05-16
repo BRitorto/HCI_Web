@@ -1,110 +1,5 @@
-/* Main features */
-
-body {
-    padding-top: 4rem;
-    padding-bottom: 2rem;
-    background:url("https://image.ibb.co/fhZBOn/bg1.png") fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    color: #262626;
-  }
-  
-  .footer {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      background-color: #233d4d;
-      text-align: center;
-      line-height: 40px;
-      height: 40px;
-  }
-  
-  /* Navbar */
-  
-  .bg-primary{
-      background-color: #233d4d!important
-  }
-  
-  .nav-link{
-      padding-right: 20px !important;
-      padding-left: 20px !important;
-  }
-  
-  .navbar{
-      font-size: 25px;
-      font-weight: 600
-  }
-  
-  /* Breadcrumb */
-  
-  .breadcrumb{
-      background: transparent !important;
-      font-size: 20px;
-      padding-top: 30px;
-      padding-bottom: 10px;
-      margin-left: 2%
-  }
-  
-  .breadcrumb-item{
-      color: white !important;
-  }
-  
-  .breadcrumb a{
-      color: black;
-  }
-  
-  .breadcrumb a:hover{
-      color: white;
-  }
-
-/* Buttons and Icons */
-
-.icon{
-	width: 30px;
-	height: 30px;
-}
-
-.btn-default{
-	margin-left: 10px;
-}
-
-.btn-outline-dark:hover{
-	background: #233d4d;
-}
-
-.btn-primary{
-	background: #233d4d;
-}
-  
-.btn-primary:hover{
-	background: #182a34;
-}
-
-.btn-link{
-	color: #262626;
-	font-size: 20px;
-}
-
-.btn-link:hover{
-	color: #233d4d;
-}
-
-.btn-outline-dark{
-	margin-left: 10px;
-}
-
-.search{
-	background: #233d4d !important;
-}
 
 /* Cards and Columns */
-
-.col{
-	padding-left: 2%;
-	padding-right: 2%;
-}
 
 .main-card{
 	background: white;
@@ -113,6 +8,8 @@ body {
     border-width: 5px;
     min-height: 300px;
 }
+
+/* Checkbox */
 
 input[type="checkbox"] {
     display: none !important;
@@ -143,3 +40,11 @@ input[type="checkbox"] {
   input[type="checkbox"]:checked + label:after {
     font-weight: bold;
   }
+
+.settings{
+  margin-left: 2rem;
+}
+
+.btn-outline-dark{
+  margin-left:1rem;
+}

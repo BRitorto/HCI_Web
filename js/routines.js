@@ -24,7 +24,7 @@ function execute_routine()
         url: 'http://127.0.0.1:8080/api/routines/'+ id_value + '/execute',
         type: 'PUT',
         success: function(response) {
-            console.log("executed!");
+            alert("Routine executed successfully!");
         }
         });
 }

@@ -4,10 +4,7 @@ var finished = false;
 
 $(document).ready(function() 
 {
-    $('#lamp-brightness').on('input', lamp_slider);
-    $('#oven-temperature').on('input', oven_slider);
-    //$('.toggle').on('click', toggle);
-    //$('.blind-toggle').on('click', toggle_blind);
+
 });
 
 
