@@ -42,7 +42,6 @@ function show_room_form()
 
 function validate(value)
 {
-    console.log(value);
     if(value.length < 3 || value.length > 60)
         return false;
     return true;
@@ -62,14 +61,14 @@ function add_new_room()
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
             case 1:
-                alert('bad input, try only alfanumeric names');
+                alert('There was an error in the input, please try only alfanumeric values.');
                 break;
             case 2:
-                alert('codigo 2');
+                alert('The name is already in use, try another one');
                 break;
 
             case 3:
-                alert("codigo 3");
+                alert("There was a problem with the server. Try reloading the page");
                 break;
 
             case 4:
@@ -124,14 +123,14 @@ function edit_room(room_id)
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
-                    alert('codigo 2');
+                    alert('The name is already in use, try another one');
                     break;
 
                 case 3:
-                    alert("codigo 3");
+                    alert("There was a problem with the server. Try reloading the page");
                     break;
 
                 case 4:
@@ -151,10 +150,8 @@ function load_rooms(rooms)
         return;
     }
     clear_displaying_rooms();
-    console.log(rooms);
     rooms.forEach(room => {
         create_new_room(room);
-        console.log("creating new room");
     });
     
 }
@@ -200,14 +197,13 @@ function delete_room()
         url: base_api+'rooms/'+ id_value,
         type: 'DELETE',
         success: function(response) {
-          console.log("delete!");
           get_rooms();
         },
         error:function(data){
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
                     alert('The name is already in use, try another one');
@@ -228,7 +224,6 @@ function delete_room()
 
 function set_current_room(room_id)
 {
-    console.log(room_id);
     sessionStorage.setItem("current_room",room_id );
     $.get(base_api+"rooms/"+ room_id,function (data){
         sessionStorage.setItem("current_room_name",data['room']["name"]);
@@ -243,7 +238,6 @@ function get_rooms()
         load_rooms(data['rooms']);
     }).done(function(){
         $('button.edit-room').off().on('click',function (data) {
-            console.log('paso');
             show_edit_room($(this).parent('li').data('child'));
           });
         $('button.delete-room').off().on('click', delete_room);
@@ -296,7 +290,6 @@ function updateResult(query) {
     search_arr.map(function(algo){
 
         query.split(" ").map(function (word){
-            console.log(algo);
             if(algo.name.toLowerCase().indexOf(word.toLowerCase()) != -1){
 
                 resultList.append('<li class="list-group-item result-li"><a href="room.html" class="result_link" data-result="'+ algo.id +'">'+algo.name+'</a></li>');

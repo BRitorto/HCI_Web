@@ -24,7 +24,10 @@ function execute_routine()
         url: 'http://127.0.0.1:8080/api/routines/'+ id_value + '/execute',
         type: 'PUT',
         success: function(response) {
-            console.log("executed!");
+            alert("Routine executed successfully!");
+        },
+        failure: function(response){
+            alert("The routine could not be executed");
         }
         });
 }
@@ -37,7 +40,7 @@ function delete_routine()
         url: 'http://127.0.0.1:8080/api/routines/'+ id_value,
         type: 'DELETE',
         success: function(response) {
-          console.log("delete!");
+          alert("Routine deleted!");
           get_routines();
         }
      });
@@ -45,7 +48,6 @@ function delete_routine()
 
 function set_current_routine(routine_id)
 {
-    console.log(routine_id);
     sessionStorage.setItem("current_routine",routine_id );
     $.get("http://127.0.0.1:8080/api/routines/"+ routine_id,function (data){
         sessionStorage.setItem("current_routine_name",data['routine']["id"]);
@@ -78,10 +80,8 @@ function load_routines(routines)
         return;
     }
     clear_displaying_routines();
-    console.log(routines);
     routines.forEach(routine => {
         create_new_routine(routine);
-        console.log("creating new routine");
     });
     
 }

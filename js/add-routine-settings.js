@@ -4,10 +4,7 @@ var finished = false;
 
 $(document).ready(function() 
 {
-    $('#lamp-brightness').on('input', lamp_slider);
-    $('#oven-temperature').on('input', oven_slider);
-    //$('.toggle').on('click', toggle);
-    //$('.blind-toggle').on('click', toggle_blind);
+
 });
 
 
@@ -25,7 +22,7 @@ function get_actions(device)
             });
             var action = {
                 'actionName': value,
-                'params': null,
+                'params': [],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -40,7 +37,7 @@ function get_actions(device)
             });
             var action = {
                 'actionName': 'setBrightness',
-                'params': value,
+                'params': [value],
                 'meta': {}
             }
 
@@ -48,7 +45,7 @@ function get_actions(device)
             
             var action = {
                 'actionName': (value == "off" ? "turnOff" : "turnOn"),
-                'params': null,
+                'params': [],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -56,7 +53,7 @@ function get_actions(device)
             value = $('#form-lamp-'+ device['id']).val();
             var action = {
                 'actionName': "setColor",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -117,7 +114,7 @@ function get_actions(device)
             });
             var action = {
                 'actionName': 'setTemperature',
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -126,7 +123,7 @@ function get_actions(device)
 
             var action = {
                 'actionName': (value == "off" ? "turnOff" : "turnOn"),
-                'params': null,
+                'params': [],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -134,7 +131,7 @@ function get_actions(device)
             value = $('#ac-'+ device['id']).val();
             var action = {
                 'actionName': "setTemperature",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -142,7 +139,7 @@ function get_actions(device)
             value = $('#form-mode-'+ device['id']).val();
             var action = {
                 'actionName': "setMode",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -150,7 +147,7 @@ function get_actions(device)
             value = $('#form-vertical-'+ device['id']).val();
             var action = {
                 'actionName': "setVerticalSwing",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -158,7 +155,7 @@ function get_actions(device)
             value = $('#form-horizontal-'+ device['id']).val();
             var action = {
                 'actionName': "setHorizontalSwing",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -166,7 +163,7 @@ function get_actions(device)
             value = $('#form-speed-'+ device['id']).val();
             var action = {
                 'actionName': "fanSpeed",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -181,7 +178,7 @@ function get_actions(device)
                 });
                 var action = {
                     'actionName': value,
-                    'params': null,
+                    'params': [],
                     'meta': null
                 }
                 selected_devices[index].actions.push(action);
@@ -189,7 +186,7 @@ function get_actions(device)
                 value = $('#form-lock-'+ device['id']).val();
                 var action = {
                     'actionName': "setMode",
-                    'params': value,
+                    'params': [value],
                     'meta': null
                 }
                 selected_devices[index].actions.push(action);
@@ -204,14 +201,14 @@ function get_actions(device)
             });
             var action = {
                 'actionName': 'setTemperature',
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             value =  $('#freezer-' + device["id"]).val();
 
             var action = {
                 'actionName': 'setFreezerTemperature',
-                'params': value,
+                'params': [value],
                 'meta': null
             }
 
@@ -220,7 +217,7 @@ function get_actions(device)
             value = $('#form-refrigerator-state-' + device["id"]).val();
             var action = {
                 'actionName': (value == "off" ? "open" : "close"),
-                'params': null,
+                'params': [],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -228,7 +225,7 @@ function get_actions(device)
             value = $('#form-refrigerator-'+ device['id']).val();
             var action = {
                 'actionName': "setTemperature",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -236,7 +233,7 @@ function get_actions(device)
             value = $('#form-refrigerator-'+ device['id']).val();
             var action = {
                 'actionName': "setFreezerTemperature",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -244,7 +241,7 @@ function get_actions(device)
             value = $('#form-refri-mode-'+ device['id']).val();
             var action = {
                 'actionName': "setMode",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);

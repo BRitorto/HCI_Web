@@ -25,7 +25,6 @@ $(document).ready(function() {
 
 function validate(value)
 {
-    console.log(value);
     if(value.length < 3 || value.length > 60)
         return false;
     return true;
@@ -37,16 +36,9 @@ function add_device(){
     
         var type = $("#select-device-category").val(); 
         add_new_device(search_id_for_device_type(type));
-        console.log("adding device");
-
-        /*$(document).off().keypress(function(e) {
-            if(e.which == 13){
-                var type = $("#select-device-category").val();
-                add_new_device(search_id_for_device_type(type));
-            }
-        });*/
         document.getElementById("dev-form").reset();
         $('#add-device-form').modal("hide");
+        alert("Device added successfully!");
     
 }
 
@@ -125,7 +117,6 @@ function add_new_device(id)
     var name = $("#device-name").val();
     var device = {'name': name, 'typeId':id, 'meta':JSON.stringify(get_meta_for_dev(id))};
     post_device(device);
-    console.log("finished");
 }
 
 function get_meta_for_dev(typeId)
@@ -204,7 +195,7 @@ function post_device(device)
     var response =  JSON.parse((data['responseText']));
     switch(response.error.code){
         case 1:
-            alert('bad input, try only alfanumeric names');
+            alert('There was an error in the input, please try only alfanumeric values.');
             break;
         case 2:
             alert('The name is already in use, try another one');
@@ -215,7 +206,7 @@ function post_device(device)
             break;
 
         case 4:
-            alert("something went wrong, please try again in a few moments");
+            alert("Something went wrong, please try again in a few minutes.");
             break;
     }
 }).done(function(data){
@@ -227,25 +218,23 @@ function post_device(device)
         type: 'PUT',
         contentType:"application/json",
         success: function(result) {
-            console.log(result);
-            console.log("succes get state");
         },
         error: function(data){
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
-                    alert('codigo 2');
+                    alert('The name is already in use, try another one');
                     break;
 
                 case 3:
-                    alert("codigo 3");
+                    alert("There was a problem with the server. Try reloading the page");
                     break;
 
                 case 4:
-                    alert("something went wrong, please try again in a few moments");
+                    alert("Something went wrong, please try again in a few minutes.");
                     break;
             }
         }
@@ -287,7 +276,6 @@ function create_dev(device, status)
     dev += '</li>'
     
     $(list).append(dev);
-    console.log("success");
     
     refresh_dev_listeners(device);
 
@@ -306,14 +294,12 @@ function refresh_dev_listeners(device)
         case "eu0v2xgprrhhg41g":
             $('#'+device['id'] ).find('.blind-toggle').off().on('click', function (){
                 toggle_blind(device, this);
-                console.log('blind' + device);
             });
             
             break;
         case "go46xmbqeomjrsjr":
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
-                console.log('lamp' + device);
             });
             $('#lamp-' + device["id"]).off().on('input', function (para) { 
                 
@@ -391,22 +377,16 @@ function refresh_dev_listeners(device)
                 timer_slider(device["id"], this.id, device);
             });
             $('#form-timer-' + device["id"]).off().change('click',function (){
-                console.log($(this).attr('value'));
                 if($(this).attr('value') == "off"){
                     update_setting(device,undefined,'stop');
-                    console.log("stopped");
                 }else{
-                    console.log("started");
                     $(this).attr('value','off');
                     update_setting(device,undefined,'start');
                 }
             });
             break;
         case "rnizejqr2di0okho":
-            // $('#'+device['id'] ).find('.toggle').off().on('click', function(){
-            //     toggle(device,this);
-                
-            // });
+
             $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
             
             $('.toggle').off().on('click', toggle);    
@@ -442,12 +422,11 @@ function get_current_room_name()
 function bind_dev_to_room(device, room_id)
 {
     $.post(base_api + "devices/"+device['id']+"/rooms/"+room_id,function(){
-        console.log("successfully bidn device to room");
     } ).fail(function(data){
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
             case 1:
-                alert('bad input, try only alfanumeric names');
+                alert('There was an error in the input, please try only alfanumeric values.');
                 break;
             case 2:
                 alert('The name is already in use, try another one');
@@ -458,7 +437,7 @@ function bind_dev_to_room(device, room_id)
                 break;
 
             case 4:
-                alert("something went wrong, please try again in a few moments");
+                alert("Something went wrong, please try again in a few minutes.");
                 break;
         }
     });
@@ -477,24 +456,23 @@ function get_devices()
                 type: 'PUT',
                 contentType:"application/json",
                 success: function(result) {
-                    console.log("succes get state");
                 },
                 function(data){
                     var response =  JSON.parse((data['responseText']));
                     switch(response.error.code){
                         case 1:
-                            alert('bad input, try only alfanumeric names');
+                            alert('There was an error in the input, please try only alfanumeric values.');
                             break;
                         case 2:
-                            alert('codigo 2');
+                            alert('The name is already in use, try another one');
                             break;
         
                         case 3:
-                            alert("codigo 3");
+                            alert("There was a problem with the server. Try reloading the page");
                             break;
         
                         case 4:
-                            alert("something went wrong, please try again in a few moments");
+                            alert("Something went wrong, please try again in a few minutes.");
                             break;
                     }
                 }
@@ -813,29 +791,27 @@ function get_device_state(device)
         type: 'PUT',
         contentType:"application/json",
         success: function(result) {
-            console.log("succes get state");
         },
         error: function(data){
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
-                    alert('codigo 2');
+                    alert('The name is already in use, try another one');
                     break;
 
                 case 3:
-                    alert("codigo 3");
+                    alert("There was a problem with the server. Try reloading the page");
                     break;
 
                 case 4:
-                    alert("something went wrong, please try again in a few moments");
+                    alert("Something went wrong, please try again in a few minutes.");
                     break;
             }
         }
     }).done(function (result){
-        console.log(result);
         var settings = load_settings(device, result['result']);
         sessionStorage.setItem('action_response',settings)
         
@@ -855,24 +831,23 @@ function update_dev(device,key, value)
         contentType:"application/json",
         data: device,
         success: function(result) {
-            console.log("succes updateing device");
         },
         error: function(data){
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
-                    alert('codigo 2');
+                    alert('The name is already in use, try another one');
                     break;
 
                 case 3:
-                    alert("codigo 3");
+                    alert("There was a problem with the server. Try reloading the page");
                     break;
 
                 case 4:
-                    alert("something went wrong, please try again in a few moments");
+                    alert("Something went wrong, please try again in a few minutes.");
                     break;
             }
         }
@@ -889,24 +864,23 @@ function delete_dev()
         type: 'DELETE',
         contentType:"application/json",
         success: function(result) {
-            console.log("succes deleting device");
         },
         error: function(data){
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
-                    alert('codigo 2');
+                    alert('The name is already in use, try another one');
                     break;
 
                 case 3:
-                    alert("codigo 3");
+                    alert("There was a problem with the server. Try reloading the page");
                     break;
 
                 case 4:
-                    alert("something went wrong, please try again in a few moments");
+                    alert("Something went wrong, please try again in a few minutes.");
                     break;
             }
         }
@@ -953,18 +927,18 @@ function edit_dev(dev_id)
                     var response =  JSON.parse((data['responseText']));
                     switch(response.error.code){
                         case 1:
-                            alert('bad input, try only alfanumeric names');
+                            alert('There was an error in the input, please try only alfanumeric values.');
                             break;
                         case 2:
-                            alert('codigo 2');
+                            alert('The name is already in use, try another one');
                             break;
         
                         case 3:
-                            alert("codigo 3");
+                            alert("There was a problem with the server. Try reloading the page");
                             break;
         
                         case 4:
-                            alert("something went wrong, please try again in a few moments");
+                            alert("Something went wrong, please try again in a few minutes.");
                             break;
                     }
                 }
@@ -1008,7 +982,6 @@ function updateResult(query) {
     search_arr.map(function(algo){
 
         query.split(" ").map(function (word){
-            console.log(algo);
             if(algo.name.toLowerCase().indexOf(word.toLowerCase()) != -1){
 
                 resultList.append('<li class="list-group-item result-li"><a href="room.html" class="result_link" data-result="'+ algo.id +'">'+algo.name+'</a></li>');
@@ -1044,7 +1017,6 @@ function get_element_searched(id)
 
 function set_current_room(room_id)
 {
-    console.log(room_id);
     sessionStorage.setItem("test", room_id);
     sessionStorage.setItem("current_room",room_id );
     $.get(base_api+"rooms/"+ room_id,function (data){
