@@ -1002,6 +1002,9 @@ function updateResult(query) {
     
     var resultList = $('#result-list');
     $('.result-li').remove();
+    if(query.length == 0){
+        return;
+    }
     search_arr.map(function(algo){
 
         query.split(" ").map(function (word){

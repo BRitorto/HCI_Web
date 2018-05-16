@@ -32,10 +32,12 @@ function updateResult(query) {
     
     var resultList = $('#result-list');
     $('.result-li').remove();
+    if(query.length == 0){
+        return;
+    }
     search_arr.map(function(algo){
 
         query.split(" ").map(function (word){
-            console.log(algo);
             if(algo.name.toLowerCase().indexOf(word.toLowerCase()) != -1){
 
                 resultList.append('<li class="list-group-item result-li"><a href="room.html" class="result_link" data-result="'+ algo.id +'">'+algo.name+'</a></li>');
