@@ -88,16 +88,18 @@ function get_all_devices()
                 }
             });
 
-            dev_arr = dev_arr.slice(dev_arr.indexOf(best),1);
+            console.log(dev_arr);
+            dev_arr = dev_arr.filter(e => e !== best);
             var new_dev = {};
+
             new_dev.type = get_type(best);
+            console.log(get_type(best));
             new_dev.room = get_room(best);
             new_dev.status =  best.meta.status;
             new_most_used.push(new_dev);
+
         }
-        console.log(most_used_devices);
         most_used_devices = new_most_used;
-        console.log(new_most_used);
         load_most_used();
     });
      
@@ -106,12 +108,16 @@ function get_all_devices()
 
 function get_type(dev)
 {
-    var return_value;
     $.get('http://127.0.0.1:8080/api/devicetypes').done(
         function (data){
             data['devices'].forEach(type=>{
-                if(dev['typeId'] == type['id'])
+                if(dev['typeId'] == type['id']){
                     sessionStorage.setItem("type_name",type['name']);
+                    console.log(sessionStorage.getItem("type_name"));
+                    console.log(type['name']);
+                    return;
+                }
+                    
             });
         }
     );

@@ -4,16 +4,7 @@ var page_ready = false;
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
-    $.when(get_rooms()).
-    then($('button.edit-room').off().on('click',function (data) {
-        console.log("paso");
-        show_edit_room(data);
-      })).
-    then($('button.delete-room').off().on('click', delete_room)).
-    then($('#add-room').off().on('click',show_room_form)).
-    then($('.room').off().on('click', function(data){
-        set_current_room(data["target"].id);
-    }));
+    get_rooms();
     
 });
 
@@ -47,9 +38,27 @@ function add_new_room()
     }
     var name = $("#roomName").val();
     var room = {"name": name};
-    $.post('http://127.0.0.1:8080/api/rooms/',room,function(){
+    $.post(base_api+'rooms/',room,function(){
         get_rooms();
-    })
+    }).fail(function(data){
+        var response =  JSON.parse((data['responseText']));
+        switch(response.error.code){
+            case 1:
+                alert('bad input, try only alfanumeric names');
+                break;
+            case 2:
+                alert('codigo 2');
+                break;
+
+            case 3:
+                alert("codigo 3");
+                break;
+
+            case 4:
+                alert("something went wrong, please try again in a few moments");
+                break;
+        }
+    });
     $('#addRoom').modal('toggle');
     
 }
@@ -80,7 +89,7 @@ function edit_room(room_id)
         "name":name
     };
     $.ajax({
-        url: 'http://127.0.0.1:8080/api/rooms/'+room_id,
+        url: base_api+'rooms/'+room_id,
         type: "PUT",
         contentType:"application/json",
         data:JSON.stringify(room),
@@ -88,7 +97,23 @@ function edit_room(room_id)
             get_rooms();
         },
         error: function(data){
-            console.log(data);
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
         }
     });
 
@@ -148,11 +173,30 @@ function delete_room()
     $(this).closest("li").hide();
     id_value = $(this).closest("li").attr("data-child");
     $.ajax({
-        url: 'http://127.0.0.1:8080/api/rooms/'+ id_value,
+        url: base_api+'rooms/'+ id_value,
         type: 'DELETE',
         success: function(response) {
           console.log("delete!");
           get_rooms();
+        },
+        error:function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
         }
      });
 }
@@ -162,16 +206,27 @@ function set_current_room(room_id)
 {
     console.log(room_id);
     sessionStorage.setItem("current_room",room_id );
-    $.get("http://127.0.0.1:8080/api/rooms/"+ room_id,function (data){
+    $.get(base_api+"rooms/"+ room_id,function (data){
         sessionStorage.setItem("current_room_name",data['room']["name"]);
     });
 }
 
 function get_rooms()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/rooms", function( data ) {
+    $.getJSON( base_api+"rooms", function( data ) {
     
         load_rooms(data['rooms']);
+    }).done(function(){
+        $('button.edit-room').off().on('click',function (data) {
+            console.log('paso');
+            show_edit_room($(this).parent('li').data('child'));
+          });
+        $('button.delete-room').off().on('click', delete_room);
+        $('#add-room').off().on('click',show_room_form);
+        $('.room').off().on('click', function(data){
+            set_current_room(data["target"].id);
+        });
+
     });
 }
 

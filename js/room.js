@@ -7,6 +7,7 @@ $(document).ready(function() {
     $('#current_room').text( "Room "+get_current_room_name());
     $('h1').text( "Room " + get_current_room_name());
     
+    
 });
 
 function add_device(){
@@ -45,10 +46,12 @@ function search_id_for_device_type(name)
 
 function retrieve_device_types()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/devicetypes", function( data ) {
-    
+    $.getJSON( base_api+ "devicetypes").
+    done(function (data){
+
+        data['devices'] = data['devices'].filter(e => e['name'] != "timer");
+
         localStorage.setItem('dev_types', JSON.stringify(data["devices"]));
-    }).done(function (){
         show_device_types();
         get_devices();
     });
@@ -174,30 +177,89 @@ function get_dev_value_by_type(name)
 
 function post_device(device)
 {
-    console.log(JSON.stringify(device));
-   $.post("http://127.0.0.1:8080/api/devices",device,function(data){
-        bind_dev_to_room(data['device'], get_current_room_id());
-        //refresh_list_dev();
-        $.when(create_dev(data['device'])).
-        then(refresh_dev_listeners(device));
+   $.post( base_api+"devices",device).fail(function(data){
+    var response =  JSON.parse((data['responseText']));
+    switch(response.error.code){
+        case 1:
+            alert('bad input, try only alfanumeric names');
+            break;
+        case 2:
+            alert('codigo 2');
+            break;
+
+        case 3:
+            alert("codigo 3");
+            break;
+
+        case 4:
+            alert("something went wrong, please try again in a few moments");
+            break;
+    }
+}).done(function(data){
+    bind_dev_to_room(data['device'], get_current_room_id());
+    //refresh_list_dev();
+    var device  = data['device'];
+    $.ajax({
+        url: base_api +'devices/'+ device.id + "/getState",
+        type: 'PUT',
+        contentType:"application/json",
+        success: function(result) {
+            console.log(result);
+            console.log("succes get state");
+        },
+        error: function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        }
+    }).done(function (result){
+        var status = result['result'];
+        create_dev(device,status);
+    });
     });
 }
 
 
-function create_dev(device)
+function create_dev(device, status)
 {   
     var list = '#'+device['typeId'];
+
+    var name = device['name'];
+    name = name.split(' ').join('-');
+
     var dev = ' <li id="'+device['id']+'">';
-    dev += '<div class="card-header" id="heading' + device['name'] + '">';
+    dev += '<div class="card-header" id="heading' + name + '">';
     dev += '<h4 class="mb-0">';
-    dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + device['name'] + '" aria-expanded="false" aria-controls="collapse'+ device['name'] +'">';
+    dev += '<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse' + name + '" aria-expanded="false" aria-controls="collapse'+ name +'">';
     dev += device['name'];
     dev += '</button>'
+    dev = dev + ' <button type="button" class="btn btn-default float-right delete-dev" >';
+    dev = dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"></img>' ;
+    dev = dev + '</button>';
+    dev = dev + '<button type="button" class="btn btn-default edit-dev float-right" >';
+    dev = dev + '<img class= "icon" src="./../images/si-glyph-pencil.svg"></img>';
+    dev = dev + '</button>'
     dev += '</h4>';
     dev += '</div>';
-    dev += '<div id="collapse' + device['name'] + '" class="collapse" aria-labelledby="heading' + device['name'] +'" data-parent="#accordionExample">';
+    dev += '<div id="collapse' + name + '" class="collapse" aria-labelledby="heading' + name +'" data-parent="#accordionExample">';
     dev += '<div class="card-body">';
-    dev += load_settings(device);
+    
+    dev += load_settings(device,status);
+
     dev += '</div></div>';
     dev += '</li>'
     
@@ -212,6 +274,11 @@ function create_dev(device)
 function refresh_dev_listeners(device)
 {
 
+    $('.delete-dev').off().on("click",delete_dev);
+    $('.edit-dev').off().on('click',function (data) {
+        show_edit_dev($(this).closest("li").attr("id"));
+      });
+
     switch(device['typeId']){
         case "eu0v2xgprrhhg41g":
             $('#'+device['id'] ).find('.blind-toggle').off().on('click', function (){
@@ -221,7 +288,6 @@ function refresh_dev_listeners(device)
             
             break;
         case "go46xmbqeomjrsjr":
-            console.log($('#'+device['id'] ).find('.toggle'));
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
                 toggle(device,this);
                 console.log('lamp' + device);
@@ -231,7 +297,7 @@ function refresh_dev_listeners(device)
                 lamp_slider(device["id"], this.id, device);
             });
             $('#form-lamp-'+ device['id']).off().change('click',function (){
-                update_setting(device,'color',$(this).val());
+                update_setting(device,parseInt($(this).find(':selected').attr('value')),'setColor');
             });
             break;
         case "im77xxyulpegfmv8":
@@ -243,53 +309,52 @@ function refresh_dev_listeners(device)
             
                 oven_slider(device["id"], this.id, device);
             });
-            $('#form-heat-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'heat',$('#form-heat-' + device["id"]).val());
+            $('#form-heat-' + device["id"]).off().change(function (){
+                update_setting(device,$(this).val(), 'setHeat');
             });
-            $('#form-grill-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'grill',$('#form-grill-' + device["id"]).val());
+            $('#form-grill-' + device["id"]).off().change(function (){
+               console.log()
+                update_setting(device,$(this).val(),'setGrill');
             });
-            $('#form-convection-' + device["id"]).off().change('click',function (){
+            $('#form-convection-' + device["id"]).off().change(function (){
 
-                update_setting(device,'convection',$('#form-convection-' + device["id"]).val());
+                update_setting(device,$(this).val(),'setConvection');
             });
 
             break;
 
         case "li6cbv5sdlatti0j":
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
-                toggle(device,this);
-                
+                toggle(device,this);        
             });           
             $('#ac-' + device["id"]).off().on('input', function (para) { 
                 ac_slider(device["id"], this.id, device);
             });
-            $('#form-mode-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'mode',$('#form-mode-' + device["id"]).val());
+            $('#form-mode-' + device["id"]).off().change(function (){
+                update_setting(device,$(this).val(),'setMode');
             });
-            $('#form-vertical-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'vertical_swing',$('#form-vertical-' + device["id"]).val());
+            $('#form-vertical-' + device["id"]).off().change(function (){
+                update_setting(device,($(this).val() == 'auto')? 'auto' :parseInt($(this).val()),'setVerticalSwing');
             });
-            $('#form-horizontal-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'horizontal_swing',$('#form-horizontal-' + device["id"]).val());
+            $('#form-horizontal-' + device["id"]).off().change(function (){
+                update_setting(device,($(this).val() == 'auto')? 'auto' :parseInt($(this).val()),'setHorizonatlSwing');
             });
-            $('#form-speed-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'fan',$('#form-speed-' + device["id"]).val());
+            $('#form-speed-' + device["id"]).off().change(function (){
+                update_setting(device,($(this).val() == 'auto')? 'auto' :parseInt($(this).val()),'setFanSpeed');
             });
             
             break;
     
         case "lsf78ly0eqrjbz91":
             $('#'+device['id'] ).find('.toggle').off().on('click', function(){
-                toggle(device,this);
-                
+                toggle_door(device,this);
             });
+
+            $('#form-lock-' + device["id"]).off().change('click',function (){
+
+                update_setting(device,undefined,$(this).val());
+            });
+
             
             break;
             
@@ -303,15 +368,22 @@ function refresh_dev_listeners(device)
                 timer_slider(device["id"], this.id, device);
             });
             $('#form-timer-' + device["id"]).off().change('click',function (){
-
-                update_setting(device,'time',$('#form-timer-' + device["id"]).val());
+                console.log($(this).attr('value'));
+                if($(this).attr('value') == "off"){
+                    update_setting(device,undefined,'stop');
+                    console.log("stopped");
+                }else{
+                    console.log("started");
+                    $(this).attr('value','off');
+                    update_setting(device,undefined,'start');
+                }
             });
             break;
         case "rnizejqr2di0okho":
-            $('#'+device['id'] ).find('.toggle').off().on('click', function(){
-                toggle(device,this);
+            // $('#'+device['id'] ).find('.toggle').off().on('click', function(){
+            //     toggle(device,this);
                 
-            });
+            // });
             $('#refrigerator-' + device["id"]).off().on('input', function (para) { 
             
             $('.toggle').off().on('click', toggle);    
@@ -323,7 +395,7 @@ function refresh_dev_listeners(device)
             });
             $('#form-refrigerator-' + device["id"]).off().change('click',function (){
 
-                update_setting(device,'mode',$('#form-refrigerator-' + device["id"]).val());
+                update_setting(device,$(this).val(),'setMode');
             });
             break;
         
@@ -346,40 +418,91 @@ function get_current_room_name()
 
 function bind_dev_to_room(device, room_id)
 {
-    $.post("http://127.0.0.1:8080/api/devices/"+device['id']+"/rooms/"+room_id,function(){
+    $.post(base_api + "devices/"+device['id']+"/rooms/"+room_id,function(){
         console.log("successfully bidn device to room");
-    } )
+    } ).fail(function(data){
+        var response =  JSON.parse((data['responseText']));
+        switch(response.error.code){
+            case 1:
+                alert('bad input, try only alfanumeric names');
+                break;
+            case 2:
+                alert('codigo 2');
+                break;
+
+            case 3:
+                alert("codigo 3");
+                break;
+
+            case 4:
+                alert("something went wrong, please try again in a few moments");
+                break;
+        }
+    });
 }
 
 function get_devices()
 {
 
-    var device_list = $.get("http://127.0.0.1:8080/api/rooms/"+get_current_room_id()+"/devices",function (data) {
+    $.get(base_api+"rooms/"+get_current_room_id()+"/devices").
+    done(function (data) {
         var arr =  data['devices'];
-        arr.forEach(dev =>{
-            create_dev(dev);
-        })
+        arr.forEach(device =>{
+
+            $.ajax({
+                url: base_api+'devices/'+ device.id + "/getState",
+                type: 'PUT',
+                contentType:"application/json",
+                success: function(result) {
+                    console.log("succes get state");
+                },
+                function(data){
+                    var response =  JSON.parse((data['responseText']));
+                    switch(response.error.code){
+                        case 1:
+                            alert('bad input, try only alfanumeric names');
+                            break;
+                        case 2:
+                            alert('codigo 2');
+                            break;
+        
+                        case 3:
+                            alert("codigo 3");
+                            break;
+        
+                        case 4:
+                            alert("something went wrong, please try again in a few moments");
+                            break;
+                    }
+                }
+            }).done(function (result){
+                var status = result['result']
+                create_dev(device,status);
+            });
+
+        });
+
       });    
 }
 
-function load_settings(device)
+function load_settings(device,prev_state)
 {
     var type_id = device['typeId'];
     switch(type_id){
         case "eu0v2xgprrhhg41g":
-            return load_blind_settings(device);
+            return load_blind_settings(device,prev_state);
         case "go46xmbqeomjrsjr":
-            return load_lamp_settings(device);
+            return load_lamp_settings(device,prev_state);
         case "im77xxyulpegfmv8":
-            return load_oven_settings(device);
+            return load_oven_settings(device,prev_state);
         case "li6cbv5sdlatti0j":
-            return load_ac_settings(device);
+            return load_ac_settings(device,prev_state);
         case "lsf78ly0eqrjbz91":
-            return load_door_settings(device);
+            return load_door_settings(device,prev_state);
         case "ofglvd9gqX8yfl3l":
-            return load_timer_settings(device);
+            return load_timer_settings(device,prev_state);
         case "rnizejqr2di0okho":
-            return load_refrigerator_settings(device);
+            return load_refrigerator_settings(device,prev_state);
         
 
     } 
@@ -387,30 +510,32 @@ function load_settings(device)
 
 
 
-function load_blind_settings(device)
+function load_blind_settings(device,status)
 {
 
     var settings;
-    var status = convert_to_json(device['meta']);
-    if(status['mode'] == "down")
-        settings = '<img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">';
-   else
+    if(status['status'] == "opened" || status['status'] == "opening" )
         settings = '<img class="img-resposinve turned-on blind-toggle" src="./../images/switches-up.png">';
+        
+   else
+        settings = '<img class="img-responsive turned-off blind-toggle" src="./../images/switches-down.png">';
     return settings;
 }
 
 
-function load_lamp_settings(device)
+function load_lamp_settings(device,prev_state)
 {
     var settings;
-    var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off'){
-        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-        settings += '<div class="settings" style="display:none">';
-    }
-    else{
+    if(prev_state['status'] == 'on')
+    {
         settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
+       
+    }
+    else
+    {
+        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+        settings += '<div class="settings" style="display:none">';
     }
     settings += '<div class="row">';
     settings += '<div class="col-4">';
@@ -427,10 +552,9 @@ function load_lamp_settings(device)
     return settings;
 }
 
-function load_oven_settings(device)
+function load_oven_settings(device,prev_state)
 {
     var settings;
-    var prev_state = convert_to_json(device['meta']);
     if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
         settings += '<div class="settings" style="display:none">';
@@ -439,7 +563,6 @@ function load_oven_settings(device)
         settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
         settings += '<div class="settings" style="display:block">';
     }
-
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>Temperature</h5>';
@@ -449,26 +572,32 @@ function load_oven_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set heat</h5>';
-    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '" value="'+prev_state['heat'] +'" ">';
-    settings += '<option>conventional</option>';
-    settings += '<option>bottom</option>';
-    settings += '<option>top</option>';
+    var state = (prev_state['heat']== null)? 'not setted' : prev_state['heat'];
+    settings += '<h6>'+ state +'</h6>';
+    settings += '<select class="form-control settings-form" id="form-heat-' + device["id"] + '">';
+    settings += '<option value ="conventional" > Conventional</option>';
+    settings += '<option value="bottom" >Bottom</option>';
+    settings += '<option value="top" >Top</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Grill</h5>';
+    state = (prev_state['grill']== null)? 'not setted' : prev_state['grill'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-grill-' + device["id"] + '" value="'+prev_state['grill'] +'" ">';
-    settings += '<option>large</option>';
-    settings += '<option>eco</option>';
-    settings += '<option>off</option>';
+    settings += '<option value="large" >Large</option>';
+    settings += '<option value="eco" >Eco</option>';
+    settings += '<option value="off" >Off</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Convection</h5>';
+    state  = (prev_state['convection']== null)? 'not setted' : prev_state['convection'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-convection-' + device["id"] + '" value="'+prev_state['convection'] +'" ">';
-    settings += '<option>normal</option>';
-    settings += '<option>eco</option>';
-    settings += '<option>off</option>';
+    settings += '<option value="normal" >Normal</option>';
+    settings += '<option value="eco" >Eco</option>';
+    settings += '<option value="off" >Off</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -479,10 +608,9 @@ function load_oven_settings(device)
     
 }
 
-function load_ac_settings(device)
+function load_ac_settings(device,prev_state)
 {
     var settings;
-    var prev_state = convert_to_json(device['meta']);
     if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
         settings += '<div class="settings" style="display:none">';
@@ -500,41 +628,49 @@ function load_ac_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
+    var state = (prev_state['mode']== null)? 'not setted' : prev_state['mode'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-mode-' + device["id"] + '" value="'+prev_state['mode'] +'" ">';
-    settings += '<option>cool</option>';
-    settings += '<option>heat</option>';
-    settings += '<option>fan</option>';
+    settings += '<option value="cool" >Cool</option>';
+    settings += '<option value="heat" >Heat</option>';
+    settings += '<option value="fan" >Fan</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set vertical swing</h5>';
+    state = (prev_state['verticalSwing']== null)? 'not setted' : prev_state['verticalSwing'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-vertical-' + device["id"] + '" value="'+prev_state['vertical_swing'] +'" ">';
-    settings += '<option>Auto</option>';
-    settings += '<option>22</option>';
-    settings += '<option>45</option>';
-    settings += '<option>67</option>';
-    settings += '<option>90</option>';
+    settings += '<option value="auto">Auto</option>';
+    settings += '<option value="22" >22</option>';
+    settings += '<option value="45" >45</option>';
+    settings += '<option value="67" >67</option>';
+    settings += '<option value="90" >90</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set horizontal swing</h5>';
+    state = (prev_state['horizontalSwing']== null)? 'not setted' : prev_state['horizontalSwing'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-horizontal-' + device["id"] + '" value="'+prev_state['horizontal_swing'] +'" ">';
     settings += '<option>Auto</option>';
-    settings += '<option>- 90</option>';
-    settings += '<option>- 45</option>';
-    settings += '<option>0</option>';
-    settings += '<option>45</option>';
-    settings += '<option>90</option>';
+    settings += '<option value="-90">- 90</option>';
+    settings += '<option value="-45">- 45</option>';
+    settings += '<option value="0">0</option>';
+    settings += '<option value="45">45</option>';
+    settings += '<option value="90">90</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set fan speed</h5>';
+    state = (prev_state['fanSpeed']== null)? 'not setted' : prev_state['fanSpeed']
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-speed-' + device["id"] + '" value="'+prev_state['fan'] +'" ">';
-    settings += '<option>Auto</option>';
-    settings += '<option>25</option>';
-    settings += '<option>50</option>';
-    settings += '<option>75</option>';
-    settings += '<option>100</option>';
+    settings += '<option value="auto">Auto</option>';
+    settings += '<option value ="25">25</option>';
+    settings += '<option value="50">50</option>';
+    settings += '<option value="75">75</option>';
+    settings += '<option value="100">100</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -544,11 +680,10 @@ function load_ac_settings(device)
 }
 
 
-function load_door_settings(device)
+function load_door_settings(device,prev_state)
 {
     var settings;
-    var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off'){
+    if(prev_state['status'] == 'closed'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
         settings += '<div class="settings" style="display:none">';
     }
@@ -560,9 +695,11 @@ function load_door_settings(device)
     settings += '<div class="col-4">';
     settings += '<div class="form-group">';
     settings += '<h5>Set lock</h5>';
+    state = (prev_state['lock']== null)? 'not setted' : prev_state['lock'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + '"  value="'+ prev_state['lock']+ '">';
-    settings += '<option>On</option>';
-    settings += '<option>Off</option>';
+    settings += '<option value ="lock">Lock</option>';
+    settings += '<option value="unlock">Unlock</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -571,10 +708,9 @@ function load_door_settings(device)
     return settings;
 }
 
-function load_timer_settings(device)
+function load_timer_settings(device,prev_state)
 {   
     var settings;
-    var prev_state = convert_to_json(device['meta']);
     if(prev_state['status'] == 'off'){
         settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
         settings += '<div class="settings" style="display:none">';
@@ -592,9 +728,11 @@ function load_timer_settings(device)
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Alarm</h5>';
+    var state = (prev_state['status']== null)? 'not setted' : prev_state['status'];
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-timer-' + device["id"] + '" value="'+ prev_state['status'] +'">';
-    settings += '<option>Start</option>';
-    settings += '<option>Stop</option>';
+    settings += '<option value="start">Start</option>';
+    settings += '<option value="stop">Stop</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -603,36 +741,32 @@ function load_timer_settings(device)
     return settings;
 }
 
-function load_refrigerator_settings(device)
+function load_refrigerator_settings(device,prev_state)
 {
     var settings;
-    var prev_state = convert_to_json(device['meta']);
-    if(prev_state['status'] == 'off'){
-        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-        settings += '<div class="settings" style="display:none">';
-    }
-    else{
-        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
-        settings += '<div class="settings" style="display:block">';
-    }
+    settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
+    settings += '<div class="settings" style="display:block">';
+
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<h5>set freezer temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="-20" max="-10" value="'+ prev_state['freezer']+ '" class="slider" id=freezer-' + device['id']+' >';
-    settings += '<span id="f'+ device['id'] +'">' + prev_state['freezer']+ '</span>';
+    settings += '<input type="range" min="-20" max="-10" value="'+ prev_state['freezerTemperature']+ '" class="slider" id=freezer-' + device['id']+' >';
+    settings += '<span id="f'+ device['id'] +'">' + prev_state['freezerTemperature']+ '</span>';
     settings += '</div>';
     settings += '<h5>set refrigerator temperature</h5>';
     settings += '<div class="slidecontainer">';
-    settings += '<input type="range" min="2" max="8" value="' + prev_state['refrigerator']+ '" class="slider" id=refrigerator-' + device['id']+'>';
-    settings += '<span id="r'+ device['id'] +'">' + prev_state['refrigerator']+ '</span>';
+    settings += '<input type="range" min="2" max="8" value="' + prev_state['temperature']+ '" class="slider" id=refrigerator-' + device['id']+'>';
+    settings += '<span id="r'+ device['id'] +'">' + prev_state['temperature']+ '</span>';
     settings += '</div>';
     settings += '<div class="form-group">';
     settings += '<h5>Set Mode</h5>';
+    var state = (prev_state['mode']== null)? 'not setted' : prev_state['mode']
+    settings += '<h6>'+ state +'</h6>';
     settings += '<select class="form-control settings-form" id="form-refrigerator-' + device["id"] + '" value="'+ prev_state['mode']+'">';
-    settings += '<option>Default</option>';
-    settings += '<option>vacations</option>';
-    settings += '<option>party</option>';
+    settings += '<option value="default">Default</option>';
+    settings += '<option value="vacation">Vacations</option>';
+    settings += '<option value="party">Party</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
@@ -647,4 +781,169 @@ function load_refrigerator_settings(device)
 function convert_to_json(json_string) 
 { 
     return JSON.parse(json_string);
+}
+
+function get_device_state(device)
+{ 
+    $.ajax({
+        url: base_api+'devices/'+ device.id + "/getState",
+        type: 'PUT',
+        contentType:"application/json",
+        success: function(result) {
+            console.log("succes get state");
+        },
+        error: function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        }
+    }).done(function (result){
+        console.log(result);
+        var settings = load_settings(device, result['result']);
+        sessionStorage.setItem('action_response',settings)
+        
+    });
+
+    return sessionStorage.getItem('action_response');
+}
+
+
+
+function update_dev(device,key, value)
+{
+    device[key] = value;
+    $.ajax({
+        url: base_api+'devices/'+ device.id ,
+        type: 'PUT',
+        contentType:"application/json",
+        data: device,
+        success: function(result) {
+            console.log("succes updateing device");
+        },
+        error: function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        }
+    });
+}
+
+
+function delete_dev()
+{
+    $(this).closest("li").hide();
+    id_value = $(this).closest("li").attr("id");
+    $.ajax({
+        url: base_api+'devices/'+ id_value,
+        type: 'DELETE',
+        contentType:"application/json",
+        success: function(result) {
+            console.log("succes deleting device");
+        },
+        error: function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        }
+    });
+}
+
+function show_edit_dev(dev_id)
+{
+    $('#editDevice').modal();
+    $('#save-edit-button').off().on('click', function(){
+        edit_dev(dev_id);
+        $('#editDevice').modal('toggle');
+    });
+    document.getElementById("dev-form").reset();
+    
+    $('#editDevice').modal('toggle');
+    
+}
+
+function edit_dev(dev_id)
+{
+    var name = $("#devNameToChange").val();
+    $.get(base_api+'devices/'+dev_id).done(
+        function(response){
+
+            var dev = {
+                "name":name,
+                "typeId":response['device']['typeId'],
+                "meta": response['device']['meta']
+            };
+            $.ajax({
+                url: base_api+"devices/"+dev_id,
+                type: "PUT",
+                contentType:"application/json",
+                data:JSON.stringify(dev),
+                success: function(result) {
+                    location.reload();
+                },
+                error: function(data){
+                    var response =  JSON.parse((data['responseText']));
+                    switch(response.error.code){
+                        case 1:
+                            alert('bad input, try only alfanumeric names');
+                            break;
+                        case 2:
+                            alert('codigo 2');
+                            break;
+        
+                        case 3:
+                            alert("codigo 3");
+                            break;
+        
+                        case 4:
+                            alert("something went wrong, please try again in a few moments");
+                            break;
+                    }
+                }
+            });
+
+    });
+
+    
 }

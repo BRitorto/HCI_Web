@@ -17,6 +17,9 @@
 <body>
 
 <!-- Navigation -->
+    <div id="errorcontainer">
+      hello
+    </div>
     <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
       <a class="navbar-brand" href="./mainpage.html">
         <img src="./..//images/logoblancosmall.png" class="img-fluid" alt="Main Logo">
@@ -129,6 +132,36 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" tabindex="-1" role="dialog" id="editDevice" data-backdrop= "true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit device</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="#" id="dev-form" >
+              
+                
+                  <div class="form-group">
+                    <label for="devName">Enter new device name</label>
+                    <input type="text" class="form-control" id="devNameToChange" placeholder="Device name">
+                  </div>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-edit-button" >Save changes</button>
+              </div>
+            
+          </div>
+        </form>
+        </div>
+      </div>
+  
   
 
     <!--Copyright-->
@@ -143,7 +176,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
-    
+    <script src="./../js/api_controller.js"></script>
     <script src="./../js/settings.js"></script>
     <script src="./../js/room.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
