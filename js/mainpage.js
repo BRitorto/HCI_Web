@@ -20,7 +20,8 @@ $(document).ready(function() {
 
 function add_device()
 {
-    
+    $('#add-device-modal').modal();
+
 }
 
 function show_room_form()
