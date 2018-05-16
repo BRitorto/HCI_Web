@@ -4,6 +4,11 @@ var selected_devices_per_room = [];
 var selected_devices = [];
 var devices_per_room = [];
 var name;
+var routine = {
+    'name': null,
+    'actions': [],
+    'meta':{}
+};
 
 $(document).ready(function() {
     console.log( "ready!" );
@@ -31,23 +36,36 @@ function save_actions()
         get_actions(element.device);
     });
 
-    console.log(selected_devices);
-    
-    /*selected_devices_per_room.forEach(room =>{
-        room.devices.forEach(device =>{
-            var actions = {
-                'deviceid': device['id'],
-                'actions': get_actions(device)
+    selected_devices.forEach(element =>{
+        var id = element.device['id'];
+        element.actions.forEach(action=>{
+            var aux = {
+                'deviceId':id,
+                'actionName':action.actionName,
+                'params':action.params,
+                'meta':"{}"
             }
-        });
-    });
+            routine.actions.push(JSON.stringify(aux));
+        })
+    })
+    post_routine();
 
-    var routine =
-    {
-        "name": name,
-        "actions": null,
-        "meta": "{}",
-    }*/
+    console.log(JSON.stringify(routine));
+}
+
+function post_routine()
+{
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/routines/',
+        type: 'POST',
+        data: JSON.stringify(routine),
+        success: function(response) {
+            console.log("posted!");
+        },
+        error: function(response){
+            console.log(response['responseText']);
+        }
+        });
 }
 
 
@@ -60,7 +78,7 @@ function save_name()
     }
     else 
     {
-        name = name;
+        routine.name = name;
     }
     $("#name-tab").attr('class', 'nav-link disabled');
     $("#rooms-tab").attr('class', 'nav-link active show');

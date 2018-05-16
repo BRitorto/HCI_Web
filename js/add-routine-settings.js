@@ -70,7 +70,7 @@ function get_actions(device)
             });
             var action = {
                 'actionName': 'setTemperature',
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -79,7 +79,7 @@ function get_actions(device)
 
             var action = {
                 'actionName': (value == "off") ? "turnOff" : "turnOn",
-                'params': null,
+                'params': [],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -87,7 +87,7 @@ function get_actions(device)
             value = $('#form-heat-'+ device['id']).val();
             var action = {
                 'actionName': "setHeat",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -95,7 +95,7 @@ function get_actions(device)
             value = $('#form-grill-'+ device['id']).val();
             var action = {
                 'actionName': "setGrill",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
@@ -103,7 +103,7 @@ function get_actions(device)
             value = $('#form-convection-'+ device['id']).val();
             var action = {
                 'actionName': "setConvection",
-                'params': value,
+                'params': [value],
                 'meta': null
             }
             selected_devices[index].actions.push(action);
