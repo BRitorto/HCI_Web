@@ -1,10 +1,7 @@
 
 var page_ready = false;
 //this array will be updated on load
-var most_used_devices = [
-    {"type": "tete",
-     "room": "mia",
-     "status":"OFF"}];
+var most_used_devices = [];
 
 var length_most_used = 3;
 
@@ -25,9 +22,11 @@ function add_device()
 }
 
 function show_room_form()
-{
+{   
     $('#add-room-modal').modal();
-    $('#add-room-save').off().on('click', add_new_room);
+    $('#add-room-save').off().on('click', function(){
+        add_new_room();
+    });
     $(document).off().keypress(function(e) {
         if(e.which == 13){
             add_new_room();
@@ -36,11 +35,24 @@ function show_room_form()
     });
     document.getElementById("room-form").reset();
 }
-
-
-function add_new_room()
+function check_validity(selector) 
+{  
+    var status = $(selector).validity;
+    if(status.tooShort)
+    {
+        alert("The name must be at least 3 characters long");
+        return false;
+    }
+    if(status.tooLong)
+    {
+            alert("the name must be less than 60 characters");
+            return false;
+   }
+   return true;
+}
+function add_new_room(selector)
 {
-    if(!check_page_status)
+    if(!check_validity("#new-room-name"))
     {
         return;
     }
@@ -54,11 +66,11 @@ function add_new_room()
                 alert('bad input, try only alfanumeric names');
                 break;
             case 2:
-                alert('codigo 2');
+                alert('The name is already in use, try another one');
                 break;
 
             case 3:
-                alert("codigo 3");
+                alert("There was a problem with the server. Try reloading the page");
                 break;
 
             case 4:
@@ -85,6 +97,9 @@ function load_most_used()
     }
 
     console.log("loding most used devices...");
+
+    $.get(base_api+'devices/')
+
     most_used_devices.forEach(element => {
         console.log("creating new device");
         create_new_device(element);
@@ -136,39 +151,56 @@ function get_all_devices()
             dev_arr = dev_arr.filter(e => e !== best);
             var new_dev = {};
 
-            new_dev.type = get_type(best);
-            console.log(get_type(best));
-            new_dev.room = get_room(best);
-            new_dev.status =  best.meta.status;
-            new_most_used.push(new_dev);
+
+            $.get(base_api+'devicetypes').done(
+                function (data){
+                    data['devices'].forEach(type=>{
+                        if(best['typeId'] == type['id']){
+                            
+                            console.log(type['name']);
+                            new_dev.type = type;
+                        }
+        
+                        $.get(base_api+'rooms').done(
+                            function(data){
+                                data['rooms'].forEach(room =>{
+                                    $.get(base_api+'rooms/'+room.id+'/devices').done(
+                                        function(data){
+                                            data['devices'].forEach(device=>{
+                                                if(device.id == best.id){
+                                                    new_dev.room = room;
+                                                    new_dev.status =  best.meta.status;
+                                                    new_most_used.push(new_dev);
+                                                    console.log(new_dev);
+                                                }
+                                                    
+                                            });
+                                        }
+                                    );
+                                    
+                                    
+                                });
+
+
+                            }
+                        );
+                            
+                    });
+
+
+                }
+            );
+            
 
         }
         most_used_devices = new_most_used;
         load_most_used();
-        update_listeners();
+        //update_listeners();
     });
      
 }
 
 
-function get_type(dev)
-{
-    $.get('http://127.0.0.1:8080/api/devicetypes').done(
-        function (data){
-            data['devices'].forEach(type=>{
-                if(dev['typeId'] == type['id']){
-                    sessionStorage.setItem("type_name",type['name']);
-                    console.log(sessionStorage.getItem("type_name"));
-                    console.log(type['name']);
-                    return;
-                }
-                    
-            });
-        }
-    );
-
-    return sessionStorage.getItem("type_name");
-}
 
 
 function get_room(dev)
@@ -199,4 +231,48 @@ function dev_in_room(dev, room_id)
     );
 
     return sessionStorage.getItem("is_room");
+}
+
+
+function get_type(dev)
+{
+    var return_value;
+    $.get('http://127.0.0.1:8080/api/devicetypes').done(
+        function (data){
+            data['devices'].forEach(type=>{
+                if(dev['typeId'] == type['id'])
+                   sessionStorage.setItem("type_name",type['name']);
+            });
+        }
+    );
+
+    return sessionStorage.getItem("type_name");
+}
+
+function get_room(dev)
+{
+    $.get('http://127.0.0.1:8080/api/rooms').done(
+        function(data){
+            data['rooms'].forEach(room =>{
+                if(dev_in_room(dev, room['id']))
+                    sessionStorage.setItem('room',room['name']);
+            });
+        }
+    );
+
+   return sessionStorage.getItem('room');
+}
+
+
+function dev_in_room(dev, room_id) 
+{ 
+    sessionStorage.setItem("is_room", false);
+    $.get('http://127.0.0.1:8080/api/rooms/'+room_id+'/devices').done(
+        function(data){
+            data['devices'].forEach(device=>{
+                if(device.id == dev.id)
+                    sessionStorage.setItem("is_room", true);
+            });
+        }
+    );
 }
