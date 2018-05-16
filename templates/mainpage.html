@@ -119,35 +119,34 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
-                <label for="roomName">Insert name</label>
+                <label for="dev-name">Insert name</label>
                 <input type="text" class="form-control" id="device-name" required="required" placeholder="Name of device">
               </div>
               <div class="form-group">
                 <label for="selectRoom">Select a type for new device</label>
-                <select class="form-control" id="selectType">
-                  <option>Blind</option>
-                  <option>Lamp</option>
-                  <option>Oven</option>
-                  <option>Air Conditioner</option>
-                  <option>Door</option>
-                  <option>Timer</option>
-                  <option>Refrigerator</option>
+                <select class="form-control" id="device-type">
+
                 </select>
               </div>
+              <button type="button" class="btn btn-outline-dark btn-lg btn-block" id="button-select-room">Select room</button>
+              <fieldset disabled id="select-room-form">
               <div class="form-group">
-                <label for="selectRoom">Select room for new device</label>
-                <select class="form-control" id="selectRoom">
-                  <option>Kitchen</option>
-                  <option>Room 1</option>
-                  <option>Room 2</option>
+                <label for="select-room"></label>
+                <select class="form-control" id="select-room">
+
                 </select>
               </div>
+              </fieldset>
               <div class="form-group">
                 <label for="roomName">Or</label>
               </div>
+              <button type="button" class="btn btn-outline-dark btn-lg btn-block" id="button-add-room">Add Room</button>
+              <fieldset disabled id="new-room-form">
               <div class="form-group">
-                <button type="button" class="btn btn-outline-dark btn-block" id="add-room-device">Add Room</button>
+                <label for="roomName"></label>
+                <input type="text" class="form-control" id="new-device-room-name" required="required" placeholder="Name of room">
               </div>
+            </fieldset>
             </form>
           </div>
           <div class="modal-footer">

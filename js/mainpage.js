@@ -1,4 +1,4 @@
-
+var wait = 0;
 var page_ready = false;
 //this array will be updated on load
 var most_used_devices = [];
@@ -9,32 +9,241 @@ $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
     
+    get_rooms();
+    retrieve_device_types();
     update_most_used();
     $('#add-room').off().on('click', show_room_form);
-    $('#add-device').off().on('click', add_device);
-
+    $('#add-device').off().on('click', add_device_modal);
+    $('#button-select-room').off().on('click', function(){
+        $('#select-room-form').prop('disabled', false);
+        $('#new-room-form').prop('disabled', true);
+    });
+    $('#button-add-room').off().on('click', function(){
+        $('#select-room-form').prop('disabled', true);
+        $('#new-room-form').prop('disabled', false);
+    });
 });
 
-function add_device()
+function add_device_modal()
 {
     $('#add-device-modal').modal();
+    $('#add-device-save').off().on('click', function(){
+        var dev_name =  $('#device-name').val();
+        var dev_type = $('#device-type').val();
+        if (document.getElementById("select-room-form").disabled)
+        {
+            var room = $('#new-device-room-name').val();
+            add_room(room, dev_name, dev_type);
+        }
+        else
+        {
+            var room_id = $('#select-room').find('option:selected').attr("data-val");
+            add_device(dev_name, dev_type, room_id);
+        }
+    })
 
+}
+
+function set_current_room(room_id)
+{
+    console.log(room_id);
+    sessionStorage.setItem("current_room",room_id );
+    $.get(base_api+"rooms/"+ room_id,function (data){
+        sessionStorage.setItem("current_room_name",data['room']["name"]);
+    });
+}
+
+function add_device(dev_name, dev_type, room_id){
+    
+    var id = search_id_for_device_type(dev_type);
+    console.log("adding device");
+    var device = {'name': dev_name, 'typeId':id, 'meta':JSON.stringify(get_meta_for_dev(id))};
+    post_device(device, room_id);  
+
+}
+
+function get_meta_for_dev(typeId)
+{
+    switch(typeId){
+        case "eu0v2xgprrhhg41g":
+            return {'mode': 'down', 'count': 0};
+        case "go46xmbqeomjrsjr":
+            return {'status':'off','color':'#563d7c', 'brightness':'50', 'count':0};
+        case "im77xxyulpegfmv8":
+            return {'status':'off', 'temperature':'180','heat':'conventional','grill':'large','convection':'normal' , 'count':0};
+        case "li6cbv5sdlatti0j":
+            return {'status':'off','temperature':'24','mode':'cool','vertical_swing':'auto','horizontal_swing':'auto','fan':'auto' , 'count':0};
+        case "lsf78ly0eqrjbz91":
+            return {'status':'close','lock':'off' , 'count':0};
+        case "ofglvd9gqX8yfl3l":
+            return {'status':'off','time':'0' , 'count':0};
+        case "rnizejqr2di0okho":
+            return {'status':'off','freezer':'-10','refrigerator':'4','mode':'default' , 'count':0};
+        
+    }
+}
+
+
+function search_id_for_device_type(name)
+{
+    var types = get_device_types();
+    var id ;
+    types.forEach(element => {
+
+        if(get_dev_type_name(element) == name){
+            id = element['id'];
+        }       
+    });
+    return id;
+}
+function get_dev_type_name(element){
+    switch(element['name']){
+        case 'blind': 
+            return 'Blind';
+        case 'lamp':
+            return 'Lamp';
+        case 'oven':
+            return 'Oven';
+        case 'ac':
+            return 'Air Conditioner';
+        case 'door':
+            return 'Door';
+        case 'alarm':
+            return 'Alarm';
+        case 'timer':
+            return 'Timer';
+        case 'refrigerator':
+            return 'Refrigerator';
+        
+    }
+}
+
+function post_device(device, room)
+{
+
+   $.post( base_api+"devices",device).fail(function(data){
+    var response =  JSON.parse((data['responseText']));
+    switch(response.error.code){
+        case 1:
+            alert('device bad input, try only alfanumeric names');
+            break;
+        case 2:
+            alert('The device name is already in use, try another one');
+            break;
+
+        case 3:
+            alert("There was a problem with the server. Try reloading the page");
+            break;
+
+        case 4:
+            alert("something went wrong, please try again in a few moments");
+            break;
+    }
+}).done(function(data){
+    bind_dev_to_room(data['device'], room);
+    });
+}
+
+function bind_dev_to_room(device, room_id)
+{
+    $.post(base_api + "devices/"+device['id']+"/rooms/"+room_id,function(){
+    } ).fail(function(data){
+        var response =  JSON.parse((data['responseText']));
+        switch(response.error.code){
+            case 1:
+                alert('bind dev bad input, try only alfanumeric names');
+                break;
+            case 2:
+                alert('bind dev The name is already in use, try another one');
+                break;
+
+            case 3:
+                alert("There was a problem with the server. Try reloading the page");
+                break;
+
+            case 4:
+                alert("something went wrong, please try again in a few moments");
+                break;
+        }
+    }).done(function(){
+        set_current_room(room_id);  
+        location.href = "./room.html";
+    });
+}
+
+function retrieve_device_types()
+{
+    $.getJSON( base_api+ "devicetypes").
+    done(function (data){
+
+        data['devices'] = data['devices'].filter(e => e['name'] != "timer");
+
+        localStorage.setItem('dev_types', JSON.stringify(data["devices"]));
+        show_device_types();
+    });
+}
+
+function show_device_types()
+{
+    data  = JSON.parse(localStorage.getItem('dev_types'));
+    data.forEach(element => {
+        if(element["name"]!= "alarm" && element["name"]!= "timer"){
+            $('#device-type').append('<option data-val="' + element["id"] + '">'+ get_dev_type_name(element) +'</option>');
+        }
+    });
+    
+}
+
+function get_device_types()
+{
+    data  = JSON.parse(localStorage.getItem('dev_types'));
+    return data;
+}
+
+function add_room(name, dev_name, dev_type)
+{
+    var room_id;
+    if(!check_page_status)
+    {
+        return;
+    }
+    var room = {"name": name};
+    $.post(base_api+'rooms/',room,function(data){
+        room_id = data.room['id'];
+
+    }).fail(function(data){
+        var response =  JSON.parse((data['responseText']));
+        switch(response.error.code){
+            case 1:
+                alert('bad input, try only alfanumeric names');
+                break;
+            case 2:
+                alert('codigo 2');
+                break;
+
+            case 3:
+                alert("codigo 3");
+                break;
+
+            case 4:
+                alert("something went wrong, please try again in a few moments");
+                break;
+        }
+    }).done(function(){
+        add_device(dev_name, dev_type, room_id);
+    });
 }
 
 function show_room_form()
 {   
     $('#add-room-modal').modal();
     $('#add-room-save').off().on('click', function(){
-        add_new_room();
+        var room_id = add_new_room();
+        set_current_room(room_id);  
+        location.href = "./room.html";
     });
-    $(document).off().keypress(function(e) {
-        if(e.which == 13){
-            add_new_room();
-            $('#add-room-modal').modal('toggle');
-        }
-    });
-    document.getElementById("room-form").reset();
 }
+
 function check_validity(selector) 
 {  
     var status = $(selector).validity;
@@ -50,15 +259,15 @@ function check_validity(selector)
    }
    return true;
 }
-function add_new_room(selector)
+
+function add_new_room()
 {
-    if(!check_validity("#new-room-name"))
-    {
-        return;
-    }
+    var room_id;
+
     var name = $("#new-room-name").val();
     var room = {"name": name};
-    $.post(base_api+'rooms/',room,function(){
+    $.post(base_api+'rooms/',room,function(data){
+        room_id = data.room['id'];
     }).fail(function(data){
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
@@ -66,7 +275,7 @@ function add_new_room(selector)
                 alert('bad input, try only alfanumeric names');
                 break;
             case 2:
-                alert('The name is already in use, try another one');
+                alert('The room name is already in use, try another one');
                 break;
 
             case 3:
@@ -78,7 +287,7 @@ function add_new_room(selector)
                 break;
         }
     });
-    $('#add-room-modal').modal('toggle');
+    return room_id;
 }
 
 // needed for every function in this file
@@ -124,7 +333,7 @@ function create_new_device(device)
 
 function update_most_used()
 {
-    get_all_devices();
+    //get_all_devices();
 }
 
 
@@ -275,4 +484,40 @@ function dev_in_room(dev, room_id)
             });
         }
     );
+}
+
+function get_rooms()
+{
+    $.getJSON( base_api+"rooms", function( data ) {
+        load_rooms(data['rooms'])}).fail(function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('Bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('The name is already in use, try another one');
+                    break;
+    
+                case 3:
+                    alert("There was a problem with the server. Try reloading the page");
+                    break;
+    
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        });
+}
+
+function load_rooms(rooms)
+{
+    if(!check_page_status)
+    {
+        return;
+    }
+    rooms.forEach(room => {
+        $('#select-room').append('<option data-val="' + room["id"] + '">'+ room['name'] +'</option>');
+    });
+    
 }
