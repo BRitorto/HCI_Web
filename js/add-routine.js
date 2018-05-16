@@ -77,9 +77,9 @@ function post_routine()
 function save_name()
 {
     var name = $("#routine-name").val();
-    if (name.length < 4)
+    if (name.length < 4 || name.length > 60)
     {
-        alert("mal nombre");
+        alert("Name should be between 3 and 60 characters");
         return;
     }
     else 

@@ -11,7 +11,7 @@ $(document).ready(function()
 
 function toggle(dev,selector)
 {
-    var status = ($(selector).hasClass("turned-off"))?'down': "up";
+    var status = ($(selector).hasClass("turned-off"))?'off': "on";
     add_one_use(dev,status);
     if ($(selector).hasClass("turned-off"))
     {
@@ -185,7 +185,7 @@ function toggle_blind(dev, selector)
         $(selector).attr("src", "./../images/switches-up.png");
         $(selector).attr("class",  "img-resposinve turned-on blind-toggle");
         var settings  = JSON.parse(dev['meta']);
-        settings['mode'] = 'up';
+        settings['status'] = 'up';
         //settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
@@ -223,7 +223,7 @@ function toggle_blind(dev, selector)
         $(selector).attr("src", "./../images/switches-down.png");
         $(selector).attr("class",  "img-resposinve turned-off blind-toggle");
         var settings  = JSON.parse(dev['meta']);
-        settings['mode'] = 'down';
+        settings['status'] = 'down';
         //settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
@@ -271,6 +271,7 @@ function add_one_use(device, status)
         contentType:"application/json",
         data : JSON.stringify(dev),
         success: function(result) {
+            console.log('this is the resutl meta');
             console.log(result);
         },
         error:function(data){
