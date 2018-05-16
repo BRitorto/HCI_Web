@@ -8,9 +8,10 @@ var length_most_used = 3;
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
-    
+    sessionStorage.setItem("mostUsed",JSON.stringify([]));
     get_rooms();
     retrieve_device_types();
+    retrieve_rooms();
     update_most_used();
     $('#add-room').off().on('click', show_room_form);
     $('#add-device').off().on('click', add_device_modal);
@@ -66,7 +67,7 @@ function get_meta_for_dev(typeId)
 {
     switch(typeId){
         case "eu0v2xgprrhhg41g":
-            return {'mode': 'down', 'count': 0};
+            return {'status': 'down', 'count': 0};
         case "go46xmbqeomjrsjr":
             return {'status':'off','color':'#563d7c', 'brightness':'50', 'count':0};
         case "im77xxyulpegfmv8":
@@ -183,6 +184,15 @@ function retrieve_device_types()
     });
 }
 
+function retrieve_rooms()
+{
+    $.getJSON( base_api+ "rooms").
+    done(function (data){
+
+        localStorage.setItem('all_room', data["rooms"]);
+    });
+}
+
 function show_device_types()
 {
     data  = JSON.parse(localStorage.getItem('dev_types'));
@@ -239,8 +249,7 @@ function show_room_form()
     $('#add-room-modal').modal();
     $('#add-room-save').off().on('click', function(){
         var room_id = add_new_room();
-        set_current_room(room_id);  
-        location.href = "./room.html";
+        
     });
 }
 
@@ -262,7 +271,7 @@ function check_validity(selector)
 
 function add_new_room()
 {
-    var room_id;
+
 
     var name = $("#new-room-name").val();
     var room = {"name": name};
@@ -286,8 +295,11 @@ function add_new_room()
                 alert("something went wrong, please try again in a few moments");
                 break;
         }
+    }).done(function(){
+        set_current_room(room_id);  
+        location.href = "./room.html";
     });
-    return room_id;
+
 }
 
 // needed for every function in this file
@@ -306,9 +318,8 @@ function load_most_used()
     }
 
     console.log("loding most used devices...");
-
-    $.get(base_api+'devices/')
-
+    $('.device').remove();
+    most_used_devices = JSON.parse(sessionStorage.getItem('mostUsed'));
     most_used_devices.forEach(element => {
         console.log("creating new device");
         create_new_device(element);
@@ -320,20 +331,23 @@ function load_most_used()
 function create_new_device(device)
 {
     var new_dev = '<tr class="device">';
-    var dev_type = '<th class = "dev_type" >' + device["type"] + '</th>';
-    var dev_room = '<td class="dev_room">' + device["room"] + '</td>';
+    var dev_type = '<th class = "dev_name" >' + device["name"] + '</th>';
+    var dev_room = '<td class="dev_room"><a href="room.html" class="to_the_room" data-target='+device["room"]['id']+' >' + device["room"]['name'] + '</a></td>';
     var dev_status = '<td class="dev_status">' + device["status"] + '</td>';
     var end_dev = '</tr>';
     new_dev = new_dev + dev_type + dev_room + dev_status + end_dev;
     $('#most_used_dev_table').append(new_dev);
     console.log("cerated new room!");
-    
+
+    $('.to_the_room').off().on('click',function(){
+        set_current_room($(this).attr('data-target'));
+    });
 }
 
 
 function update_most_used()
 {
-    //get_all_devices();
+    get_all_devices();
 }
 
 
@@ -345,7 +359,7 @@ function get_all_devices()
         dev_arr.forEach(dev=>{
             dev.meta =  JSON.parse(dev.meta);
         });
-
+        var mosts = [];
         for(var i = 0; i < length_most_used; i++)
         {
             var best = {'meta':{'count':0}};
@@ -355,55 +369,39 @@ function get_all_devices()
                     best = dev;
                 }
             });
-
-            console.log(dev_arr);
             dev_arr = dev_arr.filter(e => e !== best);
-            var new_dev = {};
-
-
-            $.get(base_api+'devicetypes').done(
-                function (data){
-                    data['devices'].forEach(type=>{
-                        if(best['typeId'] == type['id']){
-                            
-                            console.log(type['name']);
-                            new_dev.type = type;
-                        }
-        
-                        $.get(base_api+'rooms').done(
-                            function(data){
-                                data['rooms'].forEach(room =>{
-                                    $.get(base_api+'rooms/'+room.id+'/devices').done(
-                                        function(data){
-                                            data['devices'].forEach(device=>{
-                                                if(device.id == best.id){
-                                                    new_dev.room = room;
-                                                    new_dev.status =  best.meta.status;
-                                                    new_most_used.push(new_dev);
-                                                    console.log(new_dev);
-                                                }
-                                                    
-                                            });
-                                        }
-                                    );
-                                    
-                                    
-                                });
-
-
-                            }
-                        );
-                            
-                    });
-
-
-                }
-            );
-            
-
+            mosts.push(best);
         }
-        most_used_devices = new_most_used;
-        load_most_used();
+        mosts.forEach(best=>{
+            console.log("the best is"+ best.name);
+            var new_dev = {};
+            new_dev.name = best.name;
+            new_dev.status =  best.meta.status;
+            $.get(base_api+'rooms').done(function(data){
+                data['rooms'].forEach(room=>{
+                    $.get(base_api+'rooms/'+room.id+'/devices').done(function(data){
+
+                        data['devices'].forEach(dev=>{
+                            if(dev.id == best.id)
+                            {
+                                var arr = JSON.parse(sessionStorage.getItem("mostUsed"));
+                                console.log(arr);
+                                new_dev.room = room;
+                                arr.push(new_dev);
+                                sessionStorage.setItem("mostUsed",JSON.stringify(arr));
+                            }
+                        });
+
+                        load_most_used();
+                    });
+                });
+                
+                
+            });
+        });
+            
+            
+        
         //update_listeners();
     });
      

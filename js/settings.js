@@ -11,7 +11,8 @@ $(document).ready(function()
 
 function toggle(dev,selector)
 {
-    add_one_use(dev);
+    var status = ($(selector).hasClass("turned-off"))?'down': "up";
+    add_one_use(dev,status);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-on.png");
@@ -93,7 +94,8 @@ function toggle(dev,selector)
 }
 function toggle_door(dev,selector)
 {
-    add_one_use(dev);
+    var status = ($(selector).hasClass("turned-off"))?'closed': "open";
+    add_one_use(dev,status);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-on.png");
@@ -176,7 +178,8 @@ function toggle_door(dev,selector)
 
 function toggle_blind(dev, selector)
 {
-    add_one_use(dev);
+    var status = ($(selector).hasClass("turned-off"))?'down': "up";
+    add_one_use(dev,status);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-up.png");
@@ -254,10 +257,12 @@ function toggle_blind(dev, selector)
     }
 }
 
-function add_one_use(device)
+function add_one_use(device, status)
 {
     var meta = JSON.parse(device.meta);
     meta['count'] = ( typeof meta['count'] != 'number')? 0: meta['count'] + 1;
+    meta['status'] = status;
+    console.log(meta.status + "this is status");
     var dev ={'typeId': device["typeId"], 'meta': JSON.stringify(meta), 'name': device['name']};
     console.log(device);
     $.ajax({

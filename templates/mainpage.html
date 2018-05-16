@@ -37,7 +37,7 @@
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" type="text">
+        <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" oninput="updateResult(this.value)" type="search">
         <button type="submit" class="btn btn-default search float-right">
           <img class= "icon" src="./../images/magnifier.svg"/> 
         </button> 
@@ -51,6 +51,7 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
+              <ul id="result-list"></ul>
             <h1>Most Used</h1>
             <table class="table table-hover">
               <thead>
@@ -171,6 +172,7 @@
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
   <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+  <script src="./../js/search.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
   <script src="./../js/api_controller.js"></script>
