@@ -11,10 +11,23 @@ $(document).ready(function() {
             set_current_routine(data["target"].id);
         });
         $('button.delete-routine').on('click', delete_routine);
+        $('button.execute-routine').on('click', execute_routine);
+        $('#add-routine').on('click', function(){
+            location.href = "./add-routine.html";});
         });
     });
 
-
+function execute_routine()
+{
+    var id_value = $(this).closest("li").attr("data-child");
+    $.ajax({
+        url: 'http://127.0.0.1:8080/api/routines/'+ id_value + '/execute',
+        type: 'PUT',
+        success: function(response) {
+            console.log("executed!");
+        }
+        });
+}
 
 function delete_routine()
 {
@@ -83,6 +96,10 @@ function create_new_routine(routine)
 
     new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-routine">';
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"></img>' ;
+    new_dev = new_dev + '</button>';
+
+    new_dev = new_dev + ' <button type="button" class="btn btn-default float-right execute-routine">';
+    new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-circle-triangle-right.svg"></img>' ;
     new_dev = new_dev + '</button>';
     
     new_dev =new_dev + '</li> ';
