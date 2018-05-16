@@ -63,6 +63,8 @@ function post_routine()
     $.ajax({
         url: 'http://127.0.0.1:8080/api/routines/',
         type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8 ',
         data: JSON.stringify(routine),
         success: function(response) {
             console.log("posted!");
