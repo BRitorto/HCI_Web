@@ -1,14 +1,37 @@
+var search_arr = [];
 $(document).ready(function() {
     console.log( "ready!" );
-    $('#add-device-form').on('click', '#save-button', add_device);
+    $('#add-device-form').on('click', '#save-button', function(){
+        if(validate($('#device-name').val()))    
+            add_device();
+        else
+            alert("Name must be between 3 and 60 characters");
+    });
 
     retrieve_device_types();
-
-    $('#current_room').text( "Room "+get_current_room_name());
-    $('h1').text( "Room " + get_current_room_name());
+    var room_id = sessionStorage.getItem("current_room");
+    $.get(base_api+"rooms/"+ room_id,function (data){
+        sessionStorage.setItem("current_room_name",data['room']["name"]);
+        
+    }).done(function(){
+        $('#current_room').text( "Room "+get_current_room_name());
+    
+        $('h1').text( "Room " + get_current_room_name());
+        update_search_base();
+    });
     
     
 });
+
+function validate(value)
+{
+    console.log(value);
+    if(value.length < 3 || value.length > 60)
+        return false;
+    return true;
+}
+
+
 
 function add_device(){
     
@@ -413,7 +436,7 @@ function get_current_room_id()
 function get_current_room_name()
 {
 
-    return sessionStorage.getItem('current_room_name');
+    return sessionStorage.getItem("current_room_name");
 }
 
 function bind_dev_to_room(device, room_id)
@@ -894,7 +917,11 @@ function show_edit_dev(dev_id)
 {
     $('#editDevice').modal();
     $('#save-edit-button').off().on('click', function(){
-        edit_dev(dev_id);
+        if(validate($('#devNameToChange').val()))    
+            edit_dev(dev_id);
+        else
+            alert("Name must be between 3 and 60 characters");
+    
         $('#editDevice').modal('toggle');
     });
     document.getElementById("dev-form").reset();
@@ -946,4 +973,78 @@ function edit_dev(dev_id)
     });
 
     
+}
+
+
+function update_search_base()
+{
+    $.getJSON( base_api+"rooms").done(function(response){
+        response['rooms'].forEach(room=>{
+            var value =  {'type':'room', 'id':room.id, 'name':room.name};
+            search_arr.push(value);
+            $.getJSON( base_api+"rooms/"+room.id+'/devices').done(function(response){
+                response['devices'].forEach(dev=>{
+                    var device = {'type':'device', 'id':dev.id, 'room':room.id, 'name':dev.name};
+                    search_arr.push(device)
+                });
+            });
+        });
+        
+        
+
+    });
+}
+
+
+
+function updateResult(query) {
+
+    
+    var resultList = $('#result-list');
+    $('.result-li').remove();
+    search_arr.map(function(algo){
+
+        query.split(" ").map(function (word){
+            console.log(algo);
+            if(algo.name.toLowerCase().indexOf(word.toLowerCase()) != -1){
+
+                resultList.append('<li class="list-group-item result-li"><a href="room.html" class="result_link" data-result="'+ algo.id +'">'+algo.name+'</a></li>');
+
+            }
+
+        });
+
+    });
+
+    $('.result_link').off().on('click',function(){
+        var id = $(this).attr('data-result')
+        var element = get_element_searched(id);
+        if(element.type == 'room'){
+            set_current_room(element.id);
+        }else{
+            set_current_room(element.room);
+        }
+            
+    });
+
+}
+
+function get_element_searched(id)
+{
+    var found;
+    search_arr.forEach(element =>{
+        if(element.id == id)
+            found = element;
+    });
+    return found;
+}
+
+function set_current_room(room_id)
+{
+    console.log(room_id);
+    sessionStorage.setItem("test", room_id);
+    sessionStorage.setItem("current_room",room_id );
+    $.get(base_api+"rooms/"+ room_id,function (data){
+        sessionStorage.setItem("current_room_name",data['room']["name"]);
+    });
 }

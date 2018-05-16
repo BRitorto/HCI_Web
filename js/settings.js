@@ -11,6 +11,7 @@ $(document).ready(function()
 
 function toggle(dev,selector)
 {
+    add_one_use(dev);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-on.png");
@@ -92,6 +93,7 @@ function toggle(dev,selector)
 }
 function toggle_door(dev,selector)
 {
+    add_one_use(dev);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-on.png");
@@ -174,13 +176,14 @@ function toggle_door(dev,selector)
 
 function toggle_blind(dev, selector)
 {
+    add_one_use(dev);
     if ($(selector).hasClass("turned-off"))
     {
         $(selector).attr("src", "./../images/switches-up.png");
         $(selector).attr("class",  "img-resposinve turned-on blind-toggle");
         var settings  = JSON.parse(dev['meta']);
         settings['mode'] = 'up';
-        settings['count'] = settings['count'] + 1;
+        //settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
         $.ajax({
@@ -218,7 +221,7 @@ function toggle_blind(dev, selector)
         $(selector).attr("class",  "img-resposinve turned-off blind-toggle");
         var settings  = JSON.parse(dev['meta']);
         settings['mode'] = 'down';
-        settings['count'] = settings['count'] + 1;
+        //settings['count'] = settings['count'] + 1;
         dev['meta'] = JSON.stringify(settings);
         console.log(dev);
         $.ajax({
@@ -249,6 +252,42 @@ function toggle_blind(dev, selector)
             }
          });
     }
+}
+
+function add_one_use(device)
+{
+    var meta = JSON.parse(device.meta);
+    meta['count'] = ( typeof meta['count'] != 'number')? 0: meta['count'] + 1;
+    var dev ={'typeId': device["typeId"], 'meta': JSON.stringify(meta), 'name': device['name']};
+    console.log(device);
+    $.ajax({
+        url: base_api+'devices/'+ device.id ,
+        type: 'PUT',
+        contentType:"application/json",
+        data : JSON.stringify(dev),
+        success: function(result) {
+            console.log(result);
+        },
+        error:function(data){
+            var response =  JSON.parse((data['responseText']));
+            switch(response.error.code){
+                case 1:
+                    alert('bad input, try only alfanumeric names');
+                    break;
+                case 2:
+                    alert('codigo 2');
+                    break;
+
+                case 3:
+                    alert("codigo 3");
+                    break;
+
+                case 4:
+                    alert("something went wrong, please try again in a few moments");
+                    break;
+            }
+        }
+     });
 }
 
 function check_page_status()

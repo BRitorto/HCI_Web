@@ -1,10 +1,12 @@
 var page_ready = false;
-
+var search_arr = [];
 
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
     get_rooms();
+    update_search_base();
+    
     
 });
 
@@ -18,17 +20,33 @@ function check_page_status()
 function show_room_form()
 {
     $('#addRoom').modal();
-    $('#save-button').off().on('click', add_new_room);
+    $('#save-button').off().on('click', function(){
+        if(validate($('#roomName').val()))
+                add_new_room();
+        else
+            alert("Name should be between 3 and 60 characters long");
+    });
     //$('#save-button').on('keypress', add_new_room_handler);
     $(document).off().keypress(function(e) {
         if(e.which == 13){
-            add_new_room();
+            if(validate($('#roomName').val()))
+                add_new_room();
+            else
+                alert("Name should be between 3 and 60 characters long");
             $('#addRoom').modal('toggle');
         }
     });
     document.getElementById("room-form").reset();
 }
 
+
+function validate(value)
+{
+    console.log(value);
+    if(value.length < 3 || value.length > 60)
+        return false;
+    return true;
+}
 
 function add_new_room()
 {
@@ -67,12 +85,18 @@ function show_edit_room(room_id)
 {
     $('#editRoom').modal();
     $('#save-edit-button').off().on('click', function(){
-        edit_room(room_id);
+        if(validate($("#roomNameToChange").val()))
+            edit_room(room_id);
+        else
+            alert("Name should be between 3 and 60 characters long");
         $('#editRoom').modal('toggle');
     });
     $(document).off().keypress(function(e) {
         if(e.which == 13){
-            edit_room(room_id);
+            if(validate($("#roomNameToChange").val()))
+                edit_room(room_id);
+            else
+                alert("Name should be between 3 and 60 characters long");
             $('#editRoom').modal('toggle');
         }
     });
@@ -208,6 +232,7 @@ function set_current_room(room_id)
     sessionStorage.setItem("current_room",room_id );
     $.get(base_api+"rooms/"+ room_id,function (data){
         sessionStorage.setItem("current_room_name",data['room']["name"]);
+        sessionStorage.setItem("value",'hola');
     });
 }
 
@@ -236,3 +261,69 @@ function clear_displaying_rooms()
     var rooms = $("li.list-group-item").remove();
 
 }
+
+
+function update_search_base()
+{
+    $.getJSON( base_api+"rooms").done(function(response){
+        response['rooms'].forEach(room=>{
+            var value =  {'type':'room', 'id':room.id, 'name':room.name};
+            search_arr.push(value);
+            $.getJSON( base_api+"rooms/"+room.id+'/devices').done(function(response){
+                response['devices'].forEach(dev=>{
+                    var device = {'type':'device', 'id':dev.id, 'room':room.id, 'name':dev.name};
+                    search_arr.push(device)
+                });
+            });
+        });
+        
+        
+
+    });
+}
+
+
+
+
+function updateResult(query) {
+
+    
+    var resultList = $('#result-list');
+    $('.result-li').remove();
+    search_arr.map(function(algo){
+
+        query.split(" ").map(function (word){
+            console.log(algo);
+            if(algo.name.toLowerCase().indexOf(word.toLowerCase()) != -1){
+
+                resultList.append('<li class="list-group-item result-li"><a href="room.html" class="result_link" data-result="'+ algo.id +'">'+algo.name+'</a></li>');
+
+            }
+
+        });
+
+    });
+
+    $('.result_link').off().on('click',function(){
+        var id = $(this).attr('data-result')
+        var element = get_element_searched(id);
+        if(element.type == 'room'){
+            set_current_room(element.id);
+        }else{
+            set_current_room(element.room);
+        }
+            
+    });
+
+}
+
+function get_element_searched(id)
+{
+    var found;
+    search_arr.forEach(element =>{
+        if(element.id == id)
+            found = element;
+    });
+    return found;
+}
+
