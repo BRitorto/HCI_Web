@@ -15,7 +15,8 @@
 
     <script src="https://code.jquery.com/jquery.min.js"></script>
     <script src="https://getbootstrap.com/dist/js/bootstrap.js"></script>
-    <script src="./../js/mainpage.js"></script>
+    <script src="./../js/search.js"></script>
+    <script src="./../js/api_controller.js"></script>
 </head>
 <body>
 
@@ -41,7 +42,7 @@
           </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" type="text">
+          <input class="form-control mr-sm-2" placeholder="Search" aria-label="Search" oninput="updateResult(this.value)" type="search">
           <button type="submit" class="btn btn-default search float-right">
             <img class= "icon" src="./../images/magnifier.svg" alt="Search Icon"/> 
           </button> 
@@ -63,6 +64,7 @@
         <div class="col">
           <div class="main-card card">
             <div class="card-body">
+                <ul id="result-list"></ul>
               <div class="row justify-content-between">
                 <div class="col">
                   <h2>Help</h2>
@@ -85,19 +87,17 @@
                   </ol>
                   <h6>Other way:</h6>
                   <p>From “Main Page”, in the “Quick Actions” section, click on “Add Device”. You will need to choose the room in which the device will be, and then fill in the required fields.</p>
-                  <h3>How to change a device’s settings?</h3>
+                  <h3>How to change a device's settings?</h3>
                   <ol>
                   	<li>Click on the section “Rooms”</li>
                   	<li>Select the room in which the device is in</li>
                   	<li>Click on the wanted type of device</li>
                   	<li>Click on the trash can to the rightmost corner of the device’s name</li>
-                  	<li>Click “Accept” on the pop up dialog box</li>
                   </ol>
                   <h3>How to delete a room?</h3>
                   <ol>
                   	<li>Click on the section “Rooms”</li>
                   	<li>Click on the trash can to the rightmost corner of the room’s name</li>
-                  	<li>Click “Accept” on the pop up dialog box</li>
                   </ol>
                   <h3>How to create a new routine?</h3>
                   <ol>
@@ -115,7 +115,6 @@
                   <ol>
                   	<li>Click on the section “Routines”</li>
                   	<li>Click on the trash can icon on the right of the wanted routine’s name</li>
-                  	<li>Click “Accept” on the pop up dialog box</li>
                   </ol>
                   <h3>How to use the search bar?</h3>
                   <ol>
