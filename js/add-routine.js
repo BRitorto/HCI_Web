@@ -7,7 +7,7 @@ var name;
 var routine = {
     'name': null,
     'actions': [],
-    'meta':{}
+    'meta':"{}"
 };
 
 $(document).ready(function() {
@@ -19,23 +19,26 @@ $(document).ready(function() {
     $("#next2").on('click', save_selected_rooms);
     $("#next3").on('click', save_selected_devices);
     $("#next4").on('click', save_actions);
-
-
-
-    //$("#previous1").on('click', refresh_rooms);
-    //$("#previous2").on('click', refresh_devices);
-    // al final hacer essto document.getElementById("name-form").reset();
+    $(".cancel").on('click', cancel);
 
 });
 
+function cancel()
+{
+    $('#modal').modal();
+    $('#yes-button').off().on('click', function(){
+        location.href = "./routines.html"
+    });
+}
+
 function save_actions()
 {
-    console.log('soy malo');
     finished = true;
     selected_devices.forEach(element=>{
         get_actions(element.device);
     });
 
+    var array = [];
     selected_devices.forEach(element =>{
         var id = element.device['id'];
         element.actions.forEach(action=>{
@@ -45,10 +48,12 @@ function save_actions()
                 'params':action.params,
                 'meta':"{}"
             }
-            routine.actions.push(JSON.stringify(aux));
+            array.push(aux);
         })
     })
+    routine.actions = (JSON.stringify(array));
     post_routine();
+    document.getElementById("name-form").reset();
 
     console.log(JSON.stringify(routine));
 }

@@ -11,19 +11,62 @@ var length_most_used = 3;
 $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
-    $('#add-device').on('click', addDevice);
-    $('#add-room').on('click', addRoom);
-
-    function addRoom(){
-        $('#addRoomFromMain').modal();
-    }
-
-    function addDevice(){
-        $('#addDeviceFromMain').modal();
-    }
+    
     update_most_used();
+    $('#add-room').off().on('click', show_room_form);
+    $('#add-device').off().on('click', add_device);
 
 });
+
+function add_device()
+{
+    
+}
+
+function show_room_form()
+{
+    $('#add-room-modal').modal();
+    $('#add-room-save').off().on('click', add_new_room);
+    $(document).off().keypress(function(e) {
+        if(e.which == 13){
+            add_new_room();
+            $('#add-room-modal').modal('toggle');
+        }
+    });
+    document.getElementById("room-form").reset();
+}
+
+
+function add_new_room()
+{
+    if(!check_page_status)
+    {
+        return;
+    }
+    var name = $("#new-room-name").val();
+    var room = {"name": name};
+    $.post(base_api+'rooms/',room,function(){
+    }).fail(function(data){
+        var response =  JSON.parse((data['responseText']));
+        switch(response.error.code){
+            case 1:
+                alert('bad input, try only alfanumeric names');
+                break;
+            case 2:
+                alert('codigo 2');
+                break;
+
+            case 3:
+                alert("codigo 3");
+                break;
+
+            case 4:
+                alert("something went wrong, please try again in a few moments");
+                break;
+        }
+    });
+    $('#add-room-modal').modal('toggle');
+}
 
 // needed for every function in this file
 function check_page_status()
@@ -101,6 +144,7 @@ function get_all_devices()
         }
         most_used_devices = new_most_used;
         load_most_used();
+        update_listeners();
     });
      
 }

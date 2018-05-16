@@ -30,10 +30,10 @@
           <a class="nav-link" href="./rooms.html">Rooms</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Routines</a>
+          <a class="nav-link" href="./routines.html">Routines</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Help</a>
+          <a class="nav-link" href="./help.html">Help</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -75,20 +75,14 @@
               <button type="button" class="btn btn-outline-dark btn-lg btn-block" id="add-room">Add Room</button>
           </div>
         </div>
-        <div class="card">
-          <div class="card-body">
-              <h1>Alarm</h1>
-              <button type="button" class="btn btn-outline-dark btn-lg btn-block">Add Alarm</button>
-          </div>
-        </div>
       </div>
     </div>
 
   </main>
 
   <!--Popups-->
-  <popups>
-    <div class="modal fade" tabindex="-1" role="dialog" id="addRoomFromMain" data-backdrop= "true">
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="add-room-modal" data-backdrop= "true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -98,22 +92,22 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="room-form">
               <div class="form-group">
-                <label for="roomName">Enter room name</label>
-                <input type="text" class="form-control" id="roomName" placeholder="Room name">
+                <label>Enter room name</label>
+                <input type="text" class="form-control" id= "new-room-name" placeholder="Room name">
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" id="add-room-save">Save changes</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" tabindex="-1" role="dialog" id="addDeviceFromMain" data-backdrop= "true">
+    <div class="modal fade" tabindex="-1" role="dialog" id="add-device-modal" data-backdrop= "true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -125,6 +119,22 @@
           <div class="modal-body">
             <form>
               <div class="form-group">
+                <label for="roomName">Insert name</label>
+                <input type="text" class="form-control" id="device-name" placeholder="Name of device">
+              </div>
+              <div class="form-group">
+                <label for="selectRoom">Select a type for new device</label>
+                <select class="form-control" id="selectType">
+                  <option>Blind</option>
+                  <option>Lamp</option>
+                  <option>Oven</option>
+                  <option>Air Conditioner</option>
+                  <option>Door</option>
+                  <option>Timer</option>
+                  <option>Refrigerator</option>
+                </select>
+              </div>
+              <div class="form-group">
                 <label for="selectRoom">Select room for new device</label>
                 <select class="form-control" id="selectRoom">
                   <option>Kitchen</option>
@@ -133,19 +143,22 @@
                 </select>
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-outline-dark btn-block">Add Room</button>
+                <label for="roomName">Or</label>
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-outline-dark btn-block" id="add-room-device">Add Room</button>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary">Continue</button>
+            <button type="button" class="btn btn-primary" id="add-device-save">Save changes</button>
           </div>
         </div>
       </div>
       </div>
 
-  </popups>
+
 
   <!--Copyright-->
   <div class="footer">
@@ -161,6 +174,8 @@
   <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+  <script src="./../js/api_controller.js"></script>
+
   <script src="./../js/mainpage.js"></script>
 
 </body>

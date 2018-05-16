@@ -41,7 +41,7 @@ function get_actions(device)
             var action = {
                 'actionName': 'setBrightness',
                 'params': value,
-                'meta': null
+                'meta': {}
             }
 
             value = $('#form-lamp-state-' + device["id"]).val();

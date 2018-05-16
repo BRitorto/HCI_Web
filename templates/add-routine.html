@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next2">Next</button>
-                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev1">Previous</button>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg cancel">Cancel</button>
               </div>
 
               <div class="tab-pane fade show" id="devices" role="tabpanel" aria-labelledby="devices">
@@ -125,7 +125,7 @@
                 <ul class="list-unstyled" id="selected-rooms"> 
                 </ul>
                 <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next3">Next</button>
-                <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev2">Previous</button>
+                <button type="button" class="btn btn-outline-dark float-right btn-lg cancel">Cancel</button>
               </div>
 
               <div class="tab-pane fade show" id="settings" role="tabpanel" aria-labelledby="settings">
@@ -138,13 +138,32 @@
 
                   </ul>
                   <button type="button" class="btn btn-outline-dark float-right btn-lg" id="next4">Next</button>
-                  <button type="button" class="btn btn-outline-dark float-right btn-lg" id="prev4">Previous</button>
+                  <button type="button" class="btn btn-outline-dark float-right btn-lg cancel">Cancel</button>
                 </div>
 
           </div>
         </div> 
       </div>
     </main>
+
+<!-- Popups-->
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to cancel?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button type="button" class="btn btn-primary" id="yes-button">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
               
   <!--Copyright-->
