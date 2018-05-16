@@ -193,32 +193,67 @@ function delete_room()
 {
     $(this).closest("li").hide();
     id_value = $(this).closest("li").attr("data-child");
-    $.ajax({
-        url: base_api+'rooms/'+ id_value,
-        type: 'DELETE',
-        success: function(response) {
-          get_rooms();
-        },
-        error:function(data){
-            var response =  JSON.parse((data['responseText']));
-            switch(response.error.code){
-                case 1:
-                    alert('There was an error in the input, please try only alfanumeric values.');
-                    break;
-                case 2:
-                    alert('The name is already in use, try another one');
-                    break;
-    
-                case 3:
-                    alert("There was a problem with the server. Try reloading the page");
-                    break;
-    
-                case 4:
-                    alert("something went wrong, please try again in a few moments");
-                    break;
+    $.get(base_api+'rooms/'+id_value+'/devices').done(function(data){
+        data['devices'].forEach(dev=>{
+            $.ajax({
+                url: base_api+'devices/'+ id_value,
+                type: 'DELETE',
+                success: function(response) {
+                  console.log('deleted device');
+                },
+                error:function(data){
+                    var response =  JSON.parse((data['responseText']));
+                    switch(response.error.code){
+                        case 1:
+                            alert('There was an error in the input, please try only alfanumeric values.');
+                            break;
+                        case 2:
+                            alert('The name is already in use, try another one');
+                            break;
+            
+                        case 3:
+                            alert("There was a problem with the server. Try reloading the page");
+                            break;
+            
+                        case 4:
+                            alert("something went wrong, please try again in a few moments");
+                            break;
+                    }
+                }
+             });
+        });
+
+        $.ajax({
+            url: base_api+'rooms/'+ id_value,
+            type: 'DELETE',
+            success: function(response) {
+              get_rooms();
+            },
+            error:function(data){
+                var response =  JSON.parse((data['responseText']));
+                switch(response.error.code){
+                    case 1:
+                        alert('There was an error in the input, please try only alfanumeric values.');
+                        break;
+                    case 2:
+                        alert('The name is already in use, try another one');
+                        break;
+        
+                    case 3:
+                        alert("There was a problem with the server. Try reloading the page");
+                        break;
+        
+                    case 4:
+                        alert("something went wrong, please try again in a few moments");
+                        break;
+                }
             }
-        }
-     });
+         });
+
+
+    });
+
+    
 }
 
 
