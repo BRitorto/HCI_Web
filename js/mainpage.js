@@ -353,7 +353,7 @@ function update_most_used()
 
 function get_all_devices()
 {
-    $.get('http://127.0.0.1:8080/api/devices/').done( function(data){
+    $.get(base_api+'devices/').done( function(data){
         var dev_arr = data['devices'];
         var new_most_used = [];
         dev_arr.forEach(dev=>{
@@ -412,7 +412,7 @@ function get_all_devices()
 
 function get_room(dev)
 {
-    $.get('http://127.0.0.1:8080/api/rooms').done(
+    $.get(base_api+'rooms').done(
         function(data){
             data['rooms'].forEach(room =>{
                 if(dev_in_room(dev, room['id']))
@@ -428,7 +428,7 @@ function get_room(dev)
 function dev_in_room(dev, room_id) 
 { 
     sessionStorage.setItem("is_room", false);
-    $.get('http://127.0.0.1:8080/api/rooms/'+room_id+'/devices').done(
+    $.get(base_api+'rooms/'+room_id+'/devices').done(
         function(data){
             data['devices'].forEach(device=>{
                 if(device.id == dev.id)
@@ -444,7 +444,7 @@ function dev_in_room(dev, room_id)
 function get_type(dev)
 {
     var return_value;
-    $.get('http://127.0.0.1:8080/api/devicetypes').done(
+    $.get(base_api+'devicetypes').done(
         function (data){
             data['devices'].forEach(type=>{
                 if(dev['typeId'] == type['id'])
@@ -458,7 +458,7 @@ function get_type(dev)
 
 function get_room(dev)
 {
-    $.get('http://127.0.0.1:8080/api/rooms').done(
+    $.get(base_api+'rooms').done(
         function(data){
             data['rooms'].forEach(room =>{
                 if(dev_in_room(dev, room['id']))
@@ -474,7 +474,7 @@ function get_room(dev)
 function dev_in_room(dev, room_id) 
 { 
     sessionStorage.setItem("is_room", false);
-    $.get('http://127.0.0.1:8080/api/rooms/'+room_id+'/devices').done(
+    $.get(base_api+'rooms/'+room_id+'/devices').done(
         function(data){
             data['devices'].forEach(device=>{
                 if(device.id == dev.id)

@@ -5,7 +5,7 @@ $(document).ready(function() {
     console.log( "ready!" );
     page_ready = true;
 
-    $.getJSON( "http://127.0.0.1:8080/api/routines").done(function(data) {
+    $.getJSON( base_api+"routines").done(function(data) {
         load_routines(data['routines']);
         $('.routine').off().on('click', function(data){
             set_current_routine(data["target"].id);
@@ -21,7 +21,7 @@ function execute_routine()
 {
     var id_value = $(this).closest("li").attr("data-child");
     $.ajax({
-        url: 'http://127.0.0.1:8080/api/routines/'+ id_value + '/execute',
+        url: base_api+'routines/'+ id_value + '/execute',
         type: 'PUT',
         success: function(response) {
             alert("Routine executed successfully!");
@@ -37,7 +37,7 @@ function delete_routine()
     $(this).closest("li").hide();
     var id_value = $(this).closest("li").attr("data-child");
     $.ajax({
-        url: 'http://127.0.0.1:8080/api/routines/'+ id_value,
+        url: base_api+'routines/'+ id_value,
         type: 'DELETE',
         success: function(response) {
           alert("Routine deleted!");
@@ -49,7 +49,7 @@ function delete_routine()
 function set_current_routine(routine_id)
 {
     sessionStorage.setItem("current_routine",routine_id );
-    $.get("http://127.0.0.1:8080/api/routines/"+ routine_id,function (data){
+    $.get(base_api+"routines/"+ routine_id,function (data){
         sessionStorage.setItem("current_routine_name",data['routine']["id"]);
     });
 }
@@ -62,7 +62,7 @@ function check_page_status()
 
 function get_routines()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/routines", function( data ) {
+    $.getJSON( base_api+"routines", function( data ) {
         load_routines(data['routines']);
     });
 }

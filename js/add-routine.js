@@ -204,7 +204,7 @@ function show_actions()
 
 function retrieve_device_types()
 {
-    $.getJSON( "http://127.0.0.1:8080/api/devicetypes", function( data ) {
+    $.getJSON( base_api+"devicetypes", function( data ) {
     
         localStorage.setItem('dev_types', JSON.stringify(data["devices"]));
     });
