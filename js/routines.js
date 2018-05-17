@@ -90,9 +90,9 @@ function create_new_routine(routine)
 {
     var new_dev = '<li class="list-group-item list-group-item-action" data-child='+ routine['id'] +' >';
 
-    new_dev = new_dev + '<a href="./routine.html" class="routine" id="' + routine['id'] + '">';
+    new_dev = new_dev + '<span  class="routine" id="' + routine['id'] + '">';
     new_dev = new_dev + routine['name'];
-    new_dev  = new_dev + '</a>';
+    new_dev  = new_dev + '</span>';
 
     new_dev = new_dev + ' <button type="button" class="btn btn-default float-right delete-routine">';
     new_dev = new_dev + '<img class= "icon" src="./../images/si-glyph-trash.svg"></img>' ;
