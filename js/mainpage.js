@@ -6,7 +6,6 @@ var most_used_devices = [];
 var length_most_used = 3;
 
 $(document).ready(function() {
-    console.log( "ready!" );
     page_ready = true;
     sessionStorage.setItem("mostUsed",JSON.stringify([]));
     get_rooms();
@@ -53,7 +52,6 @@ function add_device_modal()
 
 function set_current_room(room_id)
 {
-    console.log(room_id);
     sessionStorage.setItem("current_room",room_id );
     $.get(base_api+"rooms/"+ room_id,function (data){
         sessionStorage.setItem("current_room_name",data['room']["name"]);
@@ -63,7 +61,6 @@ function set_current_room(room_id)
 function add_device(dev_name, dev_type, room_id){
     
     var id = search_id_for_device_type(dev_type);
-    console.log("adding device");
     var device = {'name': dev_name, 'typeId':id, 'meta':JSON.stringify(get_meta_for_dev(id))};
     post_device(device, room_id);  
 
@@ -326,11 +323,9 @@ function load_most_used()
         return;
     }
 
-    console.log("loding most used devices...");
     $('.device').remove();
     most_used_devices = JSON.parse(sessionStorage.getItem('mostUsed'));
     most_used_devices.forEach(element => {
-        console.log("creating new device");
         create_new_device(element);
     });
     
@@ -346,7 +341,6 @@ function create_new_device(device)
     var end_dev = '</tr>';
     new_dev = new_dev + dev_type + dev_room + dev_status + end_dev;
     $('#most_used_dev_table').append(new_dev);
-    console.log("cerated new room!");
 
     $('.to_the_room').off().on('click',function(){
         set_current_room($(this).attr('data-target'));
@@ -382,7 +376,6 @@ function get_all_devices()
             mosts.push(best);
         }
         mosts.forEach(best=>{
-            console.log("the best is"+ best.name);
             var new_dev = {};
             new_dev.name = best.name;
             new_dev.status =  best.meta.status;
@@ -394,7 +387,6 @@ function get_all_devices()
                             if(dev.id == best.id)
                             {
                                 var arr = JSON.parse(sessionStorage.getItem("mostUsed"));
-                                console.log(arr);
                                 new_dev.room = room;
                                 arr.push(new_dev);
                                 sessionStorage.setItem("mostUsed",JSON.stringify(arr));
