@@ -72,7 +72,7 @@ function add_new_room()
                 break;
 
             case 4:
-                alert("something went wrong, please try again in a few moments");
+                alert("Something went wrong, please try again in a few moments");
                 break;
         }
     });

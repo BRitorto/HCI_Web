@@ -126,7 +126,7 @@ function post_device(device, room)
     var response =  JSON.parse((data['responseText']));
     switch(response.error.code){
         case 1:
-            alert('device bad input, try only alfanumeric names');
+            alert('device There was an error in the input, please try only alfanumeric values.');
             break;
         case 2:
             alert('The device name is already in use, try another one');
@@ -137,7 +137,7 @@ function post_device(device, room)
             break;
 
         case 4:
-            alert("something went wrong, please try again in a few moments");
+            alert("Something went wrong, please try again in a few moments");
             break;
     }
 }).done(function(data){
@@ -152,7 +152,7 @@ function bind_dev_to_room(device, room_id)
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
             case 1:
-                alert('bind dev bad input, try only alfanumeric names');
+                alert('bind dev There was an error in the input, please try only alfanumeric values.');
                 break;
             case 2:
                 alert('bind dev The name is already in use, try another one');
@@ -163,7 +163,7 @@ function bind_dev_to_room(device, room_id)
                 break;
 
             case 4:
-                alert("something went wrong, please try again in a few moments");
+                alert("Something went wrong, please try again in a few moments");
                 break;
         }
     }).done(function(){
@@ -225,7 +225,7 @@ function add_room(name, dev_name, dev_type)
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
             case 1:
-                alert('bad input, try only alfanumeric names');
+                alert('There was an error in the input, please try only alfanumeric values.');
                 break;
             case 2:
                 alert('The name is already in use, try another one');
@@ -236,7 +236,7 @@ function add_room(name, dev_name, dev_type)
                 break;
 
             case 4:
-                alert("something went wrong, please try again in a few moments");
+                alert("Something went wrong, please try again in a few moments");
                 break;
         }
     }).done(function(){
@@ -281,7 +281,7 @@ function add_new_room()
         var response =  JSON.parse((data['responseText']));
         switch(response.error.code){
             case 1:
-                alert('bad input, try only alfanumeric names');
+                alert('There was an error in the input, please try only alfanumeric values.');
                 break;
             case 2:
                 alert('The room name is already in use, try another one');
@@ -292,7 +292,7 @@ function add_new_room()
                 break;
 
             case 4:
-                alert("something went wrong, please try again in a few moments");
+                alert("Something went wrong, please try again in a few moments");
                 break;
         }
     }).done(function(){
@@ -491,7 +491,7 @@ function get_rooms()
             var response =  JSON.parse((data['responseText']));
             switch(response.error.code){
                 case 1:
-                    alert('Bad input, try only alfanumeric names');
+                    alert('There was an error in the input, please try only alfanumeric values.');
                     break;
                 case 2:
                     alert('The name is already in use, try another one');
@@ -502,7 +502,7 @@ function get_rooms()
                     break;
     
                 case 4:
-                    alert("something went wrong, please try again in a few moments");
+                    alert("Something went wrong, please try again in a few moments");
                     break;
             }
         });
