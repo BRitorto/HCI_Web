@@ -38,7 +38,6 @@ function add_device(){
         add_new_device(search_id_for_device_type(type));
         document.getElementById("dev-form").reset();
         $('#add-device-form').modal("hide");
-        alert("Device added successfully!");
     
 }
 
@@ -210,6 +209,7 @@ function post_device(device)
             break;
     }
 }).done(function(data){
+    alert("Device added successfully!");
     bind_dev_to_room(data['device'], get_current_room_id());
     //refresh_list_dev();
     var device  = data['device'];
