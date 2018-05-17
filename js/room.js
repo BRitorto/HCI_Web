@@ -269,7 +269,7 @@ function create_dev(device, status)
     dev += '</div>';
     dev += '<div id="collapse' + name + '" class="collapse" aria-labelledby="heading' + name +'" data-parent="#accordionExample">';
     dev += '<div class="card-body">';
-    
+
     dev += load_settings(device,status);
 
     dev += '</div></div>';
@@ -361,6 +361,11 @@ function refresh_dev_listeners(device)
 
             $('#form-lock-' + device["id"]).off().change('click',function (){
 
+                update_setting(device,undefined,$(this).val());
+            });
+
+            $('#form-status-' + device["id"]).off().change('click',function (){
+                add_one_use(device, $(this).val());
                 update_setting(device,undefined,$(this).val());
             });
 
@@ -684,14 +689,24 @@ function load_ac_settings(device,prev_state)
 function load_door_settings(device,prev_state)
 {
     var settings;
-    if(prev_state['status'] == 'closed'){
-        settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
-        settings += '<div class="settings" style="display:none">';
-    }
-    else{
-        settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
-        settings += '<div class="settings" style="display:block">';
-    }
+    settings += '<div class="form-group">';
+    settings += '<h5>Set status</h5>';
+    state = (prev_state['status']== null)? 'not setted' : prev_state['status'];
+    settings += '<h6>Current state : '+ state +'</h6>';
+    settings += '<select class="form-control settings-form" id="form-status-' + device["id"] + '"  value="'+ prev_state['status']+ '">';
+    settings += '<option value ="open">Open</option>';
+    settings += '<option value="close">Close</option>';
+    settings += '</select>';
+    settings += '</div>';
+    // if(prev_state['status'] == 'closed'){
+    //     settings = '<img class="img-responsive turned-off toggle" src="./../images/switches-off.png">';
+    //     settings += '<div class="settings" style="display:none">';
+    // }
+    // else{
+    //     settings = '<img class="img-resposinve turned-on toggle" src="./../images/switches-on.png">';
+    //     settings += '<div class="settings" style="display:block">';
+    // }
+    settings += '<div class="settings" style="display:block">';
     settings += '<div class="row">';
     settings += '<div class="col-4">';
     settings += '<div class="form-group">';

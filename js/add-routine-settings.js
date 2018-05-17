@@ -10,7 +10,6 @@ $(document).ready(function()
 
 function get_actions(device)
 {
-    console.log("getteee las actoins madafaka");
     var value;
     switch(device['typeId'])
     {
@@ -162,7 +161,7 @@ function get_actions(device)
 
             value = $('#form-speed-'+ device['id']).val();
             var action = {
-                'actionName': "fanSpeed",
+                'actionName': "setFanSpeed",
                 'params': [value],
                 'meta': null
             }
@@ -185,8 +184,8 @@ function get_actions(device)
     
                 value = $('#form-lock-'+ device['id']).val();
                 var action = {
-                    'actionName': "setMode",
-                    'params': [value],
+                    'actionName': value,
+                    'params': [],
                     'meta': null
                 }
                 selected_devices[index].actions.push(action);
@@ -212,14 +211,6 @@ function get_actions(device)
                 'meta': null
             }
 
-            selected_devices[index].actions.push(action);
-
-            value = $('#form-refrigerator-state-' + device["id"]).val();
-            var action = {
-                'actionName': (value == "off" ? "open" : "close"),
-                'params': [],
-                'meta': null
-            }
             selected_devices[index].actions.push(action);
 
             value = $('#form-refrigerator-'+ device['id']).val();

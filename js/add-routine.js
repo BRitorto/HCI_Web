@@ -77,7 +77,7 @@ function post_routine()
 function save_name()
 {
     var name = $("#routine-name").val();
-    if (name.length < 4 || name.length > 60)
+    if (name.length < 3 || name.length > 60)
     {
         alert("Name should be between 3 and 60 characters");
         return;
@@ -487,8 +487,8 @@ function load_door_settings(device)
     settings += '<div class="form-group">';
     settings += '<h5>Set lock</h5>';
     settings += '<select class="form-control settings-form" id="form-lock-' + device["id"] + '" value="">';
-    settings += '<option>On</option>';
-    settings += '<option>Off</option>';
+    settings += '<option>lock</option>';
+    settings += '<option>unlock</option>';
     settings += '</select>';
     settings += '</div>';
     settings += '</div>';
