@@ -34,12 +34,18 @@ function add_device_modal()
         if (document.getElementById("select-room-form").disabled)
         {
             var room = $('#new-device-room-name').val();
-            add_room(room, dev_name, dev_type);
+            if(validate(room))
+                add_room(room, dev_name, dev_type);
+            else
+                alert("Name should be between 3 and 60 characters long");
         }
         else
         {
             var room_id = $('#select-room').find('option:selected').attr("data-val");
-            add_device(dev_name, dev_type, room_id);
+            if(validate(dev_name))
+                add_device(dev_name, dev_type, room_id);
+            else
+                alert("Name should be between 3 and 60 characters long");
         }
     })
 
@@ -248,7 +254,10 @@ function show_room_form()
 {   
     $('#add-room-modal').modal();
     $('#add-room-save').off().on('click', function(){
-        var room_id = add_new_room();
+        if(validate($("#new-room-name").val()))
+            add_new_room();
+        else
+            alert("Name should be between 3 and 60 characters long");
         
     });
 }
@@ -518,4 +527,12 @@ function load_rooms(rooms)
         $('#select-room').append('<option data-val="' + room["id"] + '">'+ room['name'] +'</option>');
     });
     
+}
+
+
+function validate(value)
+{
+    if(value.length < 3 || value.length > 60)
+        return false;
+    return true;
 }
